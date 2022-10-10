@@ -1,0 +1,106 @@
+body {
+	display: grid;
+	grid-template-columns: 15vw [content] 70vw 15vw;
+	grid-template-rows: 5vh [content] auto;
+	font-size : 24px;
+}
+input , button { font-size: 24px; }
+
+#content_container {
+	display: flex;
+	flex-direction: column;
+	grid-area: content;
+}
+
+#content_container > div { margin: 10px 0px; }
+
+#routes {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+}
+#routes > a { border: 1px solid black; padding: 10px 10px; }
+
+.horizontal_container { 
+	display: flex; 
+	flex-direction: row;
+	justify-content: space-between;
+}
+.vertical_container {
+	display: flex;
+	flex-direction: column;
+	align-content: space-between;
+}
+.center_container {
+	align-content: center;	
+	align-items:  center;
+	justify-content: center;
+}
+.form_container { margin: 5px 0px; }
+.form_label { width : 210px; }
+.form_field { width : 240px; }
+
+#header {
+	display: flex;
+	flex-direction: column;
+	align-content: space-between;
+}
+#header > div { margin: 5px 0px; }
+
+#title { text-align: center; }
+
+#tx_table_header > tr > th { border: 1px solid black; }
+#tx_table_header > tr > :nth-child( 1 ) { width: 5%; }
+#tx_table_header > tr > :nth-child( 2 ) { width: 7.5%; }
+#tx_table_header > tr > :nth-child( 3 ) { width: 7.5%; }
+#tx_table_header > tr > :nth-child( 5 ) { width: 7.5%; }
+#tx_table_header > tr > :nth-child( 6 ) { width: 7.5%; }
+#tx_table_header > tr > :nth-child( 7 ) { width: 15%; }
+
+#tx_table_body > tr > td { border: 1px solid black; height: 40px; vertical-align: middle; text-align: center; }
+#tx_table_body > tr > td :not(input[ list = "items" ] , button) { width: 100px; }
+
+#footer {
+	display: flex;
+	flex-direction: column;
+	align-content: space-between;
+}
+#footer > div { margin: 5px 0px; }
+
+#signature_label { text-align: center; margin-top: 5px; }
+
+#controls_container > button { width: 200px; }
+
+@media print {
+	/*#Actions , #add_row , #controls , #routes , .actions { display: none; }*/
+
+	#routes , #add_row , #controls_container , #search_header , .hidden_print { display: none; }
+
+	body {
+		grid-template-columns: [content] 100vw;
+		grid-template-rows: 1vh [content] auto;
+		font-size: 12px;
+		color : black;
+	}
+	input { 
+		border: none;
+		color : black;
+		font-size: 16px;
+	}
+
+	input::-webkit-outer-spin-button,
+	input::-webkit-inner-spin-button {
+	  -webkit-appearance: none;
+	  margin: 0;
+	}
+	input[type=number] {
+	  -moz-appearance: textfield;
+	}
+
+	td > input { text-align: center; }
+
+	#name_input_container { align-content : center; }
+	#tx_table_body > tr > td { border: 1px solid black; height: 25px; vertical-align: middle; text-align: center; }
+	#tx_table_body > tr > td :not(input[ list = "items" ] , button) { width: 50px; }
+
+}
