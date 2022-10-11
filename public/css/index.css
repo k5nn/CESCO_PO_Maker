@@ -100,7 +100,7 @@ input , button { font-size: 24px; }
 	td > input { text-align: center; }
 
 	#name_input_container { align-content : center; }
-	#tx_table_body > tr > td { border: 1px solid black; height: 25px; vertical-align: middle; text-align: center; }
+	#tx_table_body > tr > td { border: 1px solid black; vertical-align: middle; text-align: center; }
 	#tx_table_body > tr > td :not(input[ list = "items" ] , button) { width: 50px; }
 
 }
