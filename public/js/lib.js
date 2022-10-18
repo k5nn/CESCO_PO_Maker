@@ -133,7 +133,7 @@ function state_handler( params ) {
 					stateObj[ route ][ params.key ][ params.tx_item ][ params.column ] = params.value
 				}
 			} else {
-				console.log( `state_handler : ${params.value}` )
+				// console.log( `state_handler : ${params.value}` )
 				stateObj[ route ][ params.key ] = params.value
 			}
 
@@ -210,9 +210,10 @@ function add_qty() {
 		state_handler( { key : "data" , operation : "update" , tx_item : tr.rowIndex , column : 6 , value : total.innerHTML } )
 
 		for (item of stateObj[ route ].data) { gt += parseFloat( JSON.parse( item[ 6 ] ) ) }
-		state_handler( { key : "tx_total" , operation : "update" , value : gt } )
+		state_handler( { key : "tx_total" , operation : "update" , value : parseFloat( gt ).toFixed( 2 ) } )
 		document.querySelector( "#total_field" ).innerHTML = ""
 		document.querySelector( "#total_field" ).innerHTML = parseFloat( gt ).toFixed( 2 )
+		save_tx( true )
 	}
 
 }
@@ -294,9 +295,10 @@ function add_rate() {
 		state_handler( { key : "data" , operation : "update" , tx_item : tr.rowIndex , column : 6 , value : total.innerHTML } )
 
 		for (item of stateObj[ route ].data) { gt += parseFloat( JSON.parse( item[ 6 ] ) ) }
-		state_handler( { key : "tx_total" , operation : "update" , value : gt } )
+		state_handler( { key : "tx_total" , operation : "update" , value : parseFloat( gt ).toFixed( 2 ) } )
 		document.querySelector( "#total_field" ).innerHTML = ""
 		document.querySelector( "#total_field" ).innerHTML = parseFloat( gt ).toFixed( 2 )
+		save_tx( true )
 	}
 }
 
@@ -337,9 +339,10 @@ function add_price() {
 		state_handler( { key : "data" , operation : "update" , tx_item : tr.rowIndex , column : 6 , value : total.innerHTML } )
 
 		for (item of stateObj[ route ].data) { gt += parseFloat( JSON.parse( item[ 6 ] ) ) }
-		state_handler( { key : "tx_total" , operation : "update" , value : gt } )
+		state_handler( { key : "tx_total" , operation : "update" , value : parseFloat( gt ).toFixed( 2 ) } )
 		document.querySelector( "#total_field" ).innerHTML = ""
 		document.querySelector( "#total_field" ).innerHTML = parseFloat( gt ).toFixed( 2 )
+		save_tx( true )
 	}
 
 }
@@ -369,7 +372,7 @@ function add_entry( item_arr , id ) {
 					new_td.innerHTML = add_row_params[ item ]
 				} else {
 
-					console.log( 'there' )
+					// console.log( 'there' )
 
 					let add_elem = JSON.parse( add_row_params[ item ] )
 					add_elem.parent = new_td
@@ -380,7 +383,7 @@ function add_entry( item_arr , id ) {
 				}
 			} catch {
 
-				console.log( 'where' )
+				// console.log( 'where' )
 
 				new_td.innerHTML = add_row_params[ item ]
 			}
@@ -465,17 +468,23 @@ function add_entry( item_arr , id ) {
 		document.querySelector( "#total_field" ).innerHTML = ( document.querySelector( "#total_field" ).innerHTML == "" )
 			? document.querySelector( "#total_field" ).innerHTML = add_row_params[ 6 ]
 			: document.querySelector( "#total_field" ).innerHTML = (current_tot + parseFloat( add_row_params[ "6" ] )).toFixed( 2 )
-		state_handler( { key : "tx_total" , operation : "update" , value : document.querySelector( "#total_field" ).innerHTML } )
+		state_handler( { key : "tx_total" , operation : "update" , value : parseFloat( document.querySelector( "#total_field" ).innerHTML ).toFixed( 2 ) } )
 
 		document.querySelector( '#add_price' ).disabled = true
 		document.querySelector( '#add_rate' ).disabled = true
 
 		state_handler( { key : "data" , operation : "create" , value : add_row_params } )
+		save_tx( true )
+
+		if ( document.querySelector( "#count_label" ) ) {
+			document.querySelector( "#count_label" ).innerHTML = `${stateObj[route].data.length} items`
+		}
 	}
 
 }
 
 function remove_entry() {
+	let route = window.location.pathname.split( "/" )[ 1 ]
 	let tbody = document.querySelector( "#tx_table_body" )
 	let tr = event.target.parentNode.parentNode
 	let minus_val = tr.children[ 6 ].innerHTML
@@ -485,8 +494,15 @@ function remove_entry() {
 	tbody.deleteRow( tr.rowIndex - 1 )
 
 	document.querySelector( "#total_field" ).innerHTML = ( tbody.rows.length == 1 )
-	? document.querySelector( "#total_field" ).innerHTML = ""
-	: document.querySelector( "#total_field" ).innerHTML = (current_tot - parseFloat( minus_val )).toFixed( 2 )
+		? document.querySelector( "#total_field" ).innerHTML = ""
+		: document.querySelector( "#total_field" ).innerHTML = (current_tot - parseFloat( minus_val )).toFixed( 2 )
+	state_handler( { key : "tx_total" , operation : "update" , value : parseFloat( document.querySelector( "#total_field" ).innerHTML ).toFixed( 2 ) } )
+	save_tx( true )
+
+	if ( document.querySelector( "#count_label" ) ) {
+		document.querySelector( "#count_label" ).innerHTML = `${stateObj[route].data.length} items`
+	}
+
 }
 //#3.2 Table Manip Handlers
 
@@ -510,7 +526,7 @@ function customer_name() {
 	}
 }
 
-function save_tx() {
+function save_tx( suppress ) {
 	let route = window.location.pathname.split( "/" )[ 1 ]
 	let save_obj = stateObj[ route ]
 	save_obj.tx_date = document.querySelector( "#date_field" ).innerHTML
@@ -523,13 +539,16 @@ function save_tx() {
 
 	fetch( '/save_tx' , params ).then( res => {
 		res.json().then( json => {
+
+			if (suppress) { return }
+
 			alert( json.message )
-			reset_tx()
 		})
 	})
 }
 
 function search_tx() {
+	let route = window.location.pathname.split( "/" )[ 1 ]
 
 	if ( document.querySelector( "#tx_table" ) != null ) {
 		return
@@ -587,7 +606,16 @@ function search_tx() {
 					generic_container( 
 						{ id : "footer_details_container" , horizontal : true , parent : document.querySelector( "#footer" ) } 
 					)
-						generic_container( 
+						generic_container(
+							{ id : "count_container" , horizontal : true , parent : document.querySelector( "#footer_details_container" ) }
+						)
+							generic_label(
+								{ id : "count_label" , 
+								  innerHTML : `${stateObj[route].data.length} items` ,
+								  parent : document.querySelector( "#count_container" )
+								}
+							)
+						generic_container(
 							{ id : "signature_container" , horizontal : true , parent : document.querySelector( "#footer_details_container" ) } 
 						)
 							generic_label(
@@ -794,6 +822,10 @@ function reset_tx() {
 		document.querySelector( "#tx_owner_field" ).disabled = false
 
 	}
+
+	if ( document.querySelector( "#count_label" ) ) {
+		document.querySelector( "#count_label" ).innerHTML = `0 items`
+	}
 }
 //#3.4 UI Handlers
 
@@ -945,7 +977,7 @@ function thead_row() {
 	let route = window.location.pathname.split( "/" )[ 1 ]
 
 	const table_headers = ( route == "collect_tx" ) 
-		? [ "Id" , "Date" , "Total" ]
+		? [ "Transaction No" , "Date" , "Total" ]
 		: [ "Actions" , "Qty" , "Unit" , "Item" , "Rate" , "Price" , "Total" ]
 
 	for ( header of table_headers ) {
@@ -996,6 +1028,8 @@ function tbody_row() {
 	}
 
 	if ( route != "collect_tx" ) { add_entry( table_add_row , "add_row" ) }
+
+
 
 }
 //#4.3 Table Components

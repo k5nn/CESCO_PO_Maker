@@ -10,9 +10,9 @@ const network_info = {}
 const port = 3000
 
 const SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly'];
-const TOKEN_PATH = './token.json';
 const BASE_DIR = '/home/kennedy/Projects/po_maker'
 const ACTIVE_DIR = `${BASE_DIR}/public/data/Active`
+const TOKEN_PATH = `${BASE_DIR}/src/token.json`;
 
 app.use(express.json()) // for parsing application/json
 app.use(express.urlencoded({ extended: true }))
@@ -79,7 +79,7 @@ app.get( '/fetch_customers' , ( req , res ) => {
 })
 
 app.post( '/price' , ( req , res ) => {
-  fs.readFile('credentials.json', (err, content) => {
+  fs.readFile(`${BASE_DIR}/src/credentials.json`, (err, content) => {
     if (err) return console.log('Error loading client secret file:', err);
 
     authorize( JSON.parse( content ) , auth => {
@@ -179,7 +179,7 @@ app.post( '/save_tx' , ( req , res ) => {
   date_arr[ 1 ] = ( date_arr[ 1 ].length == 2 ) ? date_arr[ 1 ] : `0${date_arr[ 1 ]}`
   date_arr[ 0 ] = ( date_arr[ 0 ].length == 2 ) ? date_arr[ 0 ] : `0${date_arr[ 0 ]}`
 
-  let filename_date = `${date_arr[ 2 ]}${date_arr[ 1 ]}${date_arr[ 0 ]}`
+  let filename_date = `${date_arr[ 2 ]}${date_arr[ 0 ]}${date_arr[ 1 ]}`
 
   fs.exists( dest_dir , ( err ) => {
 

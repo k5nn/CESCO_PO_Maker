@@ -1,5 +1,3 @@
-customers = []
-
 items = {
 	'Deformed Bar 8mm x 6mts' : {
 		'Code' : 'DEF8MM6' ,
@@ -481,5 +479,709 @@ items = {
 		'SheetID' : '1nUkGnamq1El_mghlEorHsXCQ1vNVLIAdtQ5r6l_AOTc' ,
 		'Range' : 'API_Mapping!A95:C111'
 	} ,
-
+	'Angle Bar 2.0mm(1/8) x 1(B)' : {
+		'Code' : 'AB181B' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A1:F5'
+	},
+	'Angle Bar 2.5mm(3/16) x 1( R )' : {
+		'Code' : 'AB3161R' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A1:F24'
+	},
+	'Angle Bar 3.0mm(3/16) x 1(Y)' : {
+		'Code' : 'AB3161Y' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A1:F24'
+	},
+	'Angle Bar 2.5mm(3/16) x 1 1/2( R )' : {
+		'Code' : 'AB316112R' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A1:F24'
+	},
+	'Angle Bar 3.0mm(3/16) x 1 1/2( Y )' : {
+		'Code' : 'AB316112Y' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A1:F24'
+	},
+	'Angle Bar 2.5mm(3/16) x 2( R )' : {
+		'Code' : 'AB3162R' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A1:F24'
+	},
+	'Angle Bar 3.0mm(3/16) x 2( Y )' : {
+		'Code' : 'AB3162Y' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A1:F24'
+	},
+	'Angle Bar 4.0mm(3/16) x 2 1/2(O)' : {
+		'Code' : 'AB316212O' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A1:F24'
+	},
+	'Angle Bar 4.0mm(3/16) x 3(O)' : {
+		'Code' : 'AB3163O' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A1:F24'
+	},
+	'Angle Bar 3.5mm(1/4) x 1(G)' : {
+		'Code' : 'AB141G' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A1:F24'
+	},
+	'Angle Bar 4.0mm(1/4) x 1(O)' : {
+		'Code' : 'AB141O' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A1:F24'
+	},
+	'Angle Bar 3.5mm(1/4) x 1 1/2(G)' : {
+		'Code' : 'AB14112G' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A1:F24'
+	},
+	'Angle Bar 4.5mm(1/4) x 1 1/2(V)' : {
+		'Code' : 'AB14112V' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A1:F24'
+	},
+	'Angle Bar 3.5mm(1/4) x 2(G)' : {
+		'Code' : 'AB142G' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A1:F24'
+	},
+	'Angle Bar 4.5mm(1/4) x 2(V)' : {
+		'Code' : 'AB142V' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A1:F24'
+	},
+	'Angle Bar 5.0mm(1/4) x 2(W)' : {
+		'Code' : 'AB142W' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A1:F24'
+	},
+	'Angle Bar 6.0mm(1/4) x 2(BN)' : {
+		'Code' : 'AB142BN' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A1:F24'
+	},
+	'Angle Bar 5.0mm(1/4) x 2 1/2(W)' : {
+		'Code' : 'AB14212W' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A1:F24'
+	},
+	'Angle Bar 4.5mm(1/4) x 3(V)' : {
+		'Code' : 'AB143V' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A1:F24'
+	},
+	'Angle Bar 5.0mm(1/4) x 3(W)' : {
+		'Code' : 'AB143W' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A1:F24'
+	},
+	'Flat Bar 1/8 x 3/8' : {
+		'Code' : 'FB1838' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A26:F63'
+	},
+	'Flat Bar 1/8 x 1/2' : {
+		'Code' : 'FB1812' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A26:F63'
+	},
+	'Flat Bar 1/8 x 5/8' : {
+		'Code' : 'FB1858' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A26:F63'
+	},
+	'Flat Bar 1/8 x 3/4' : {
+		'Code' : 'FB1834' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A26:F63'
+	},
+	'Flat Bar 1/8 x 1' : {
+		'Code' : 'FB181' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A26:F63'
+	},
+	'Flat Bar 1/8 x 1 1/2' : {
+		'Code' : 'FB18112' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A26:F63'
+	},
+	'Flat Bar 1/8 x 2' : {
+		'Code' : 'FB182' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A26:F63'
+	},
+	'Flat Bar 3/16 x 1/2' : {
+		'Code' : 'FB31612' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A26:F63'
+	},
+	'Flat Bar 3/16 x 5/8' : {
+		'Code' : 'FB31658' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A26:F63'
+	},
+	'Flat Bar 3/16 x 3/4' : {
+		'Code' : 'FB31634' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A26:F63'
+	},
+	'Flat Bar 3/16 x 1' : {
+		'Code' : 'FB31612' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A26:F63'
+	},
+	'Flat Bar 3/16 x 1 1/2' : {
+		'Code' : 'FB316112' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A26:F63'
+	},
+	'Flat Bar 3/16 x 2' : {
+		'Code' : 'FB3162' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A26:F63'
+	},
+	'Flat Bar 1/4 x 5/8' : {
+		'Code' : 'FB1458' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A26:F63'
+	},
+	'Flat Bar 1/4 x 3/4 (R)' : {
+		'Code' : 'FB1434R' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A26:F63'
+	},
+	'Flat Bar 1/4 x 3/4 (W)' : {
+		'Code' : 'FB1434W' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A26:F63'
+	},
+	'Flat Bar 1/4 x 1 (R)' : {
+		'Code' : 'FB141R' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A26:F63'
+	},
+	'Flat Bar 1/4 x 1 (W)' : {
+		'Code' : 'FB141W' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A26:F63'
+	},
+	'Flat Bar 1/4 x 1 1/2 (R)' : {
+		'Code' : 'FB14112R' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A26:F63'
+	},
+	'Flat Bar 1/4 x 1 1/2 (W)' : {
+		'Code' : 'FB14112W' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A26:F63'
+	},
+	'Flat Bar 1/4 x 2 (R)' : {
+		'Code' : 'FB142R' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A26:F63'
+	},
+	'Flat Bar 1/4 x 2 (W)' : {
+		'Code' : 'FB142W' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A26:F63'
+	},
+	'Flat Bar 1/4 x 2 1/2 (W)' : {
+		'Code' : 'FB14112W' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A26:F63'
+	},
+	'Flat Bar 1/4 x 3 (W)' : {
+		'Code' : 'FB143W' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A26:F63'
+	},
+	'Flat Bar 3/8 x 1' : {
+		'Code' : 'FB381' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A26:F63'
+	},
+	'Flat Bar 3/8 x 1 1/4' : {
+		'Code' : 'FB38114' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A26:F63'
+	},
+	'Flat Bar 3/8 x 1 1/2' : {
+		'Code' : 'FB38112' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A26:F63'
+	},
+	'Flat Bar 3/8 x 2' : {
+		'Code' : 'FB382' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A26:F63'
+	},
+	'Flat Bar 3/8 x 2(Local)' : {
+		'Code' : 'FB382L' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A26:F63'
+	},
+	'Flat Bar 3/8 x 2 1/2(Local)' : {
+		'Code' : 'FB38212L' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A26:F63'
+	},
+	'Flat Bar 3/8 x 3(Local)' : {
+		'Code' : 'FB383L' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A26:F63'
+	},
+	'Flat Bar 1/2 x 1 *' : {
+		'Code' : 'FB121' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A26:F63'
+	},
+	'Flat Bar 1/2 x 1 1/4' : {
+		'Code' : 'FB12114' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A26:F63'
+	},
+	'Flat Bar 1/2 x 1 1/2' : {
+		'Code' : 'FB12112' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A26:F63'
+	},
+	'Flat Bar 1/2 x 2(Local)' : {
+		'Code' : 'FB122L' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A26:F63'
+	},
+	'Flat Bar 1/2 x 2 1/2(Local)' : {
+		'Code' : 'FB12212L' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A26:F63'
+	},
+	'Flat Bar 1/2 x 3(Local)' : {
+		'Code' : 'FB123L' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A26:F63'
+	},
+	'Plain Round Bar 5.0mm x 6M 1/4' : {
+		'Code' : 'PB14' ,
+		'SheetID' : 'here' ,
+		'Range' : 'API_Mapping!A65:F70'
+	} ,
+	'Plain Round Bar 7.0mm x 6M 5/16' : {
+		'Code' : 'PB51' ,
+		'SheetID' : 'here' ,
+		'Range' : 'API_Mapping!A65:F70'
+	} ,
+	'Plain Round Bar 10.0mm x 6M 3/8 (GREEN)' : {
+		'Code' : 'PB38' ,
+		'SheetID' : 'here' ,
+		'Range' : 'API_Mapping!A65:F70'
+	} ,
+	'Plain Round Bar 12.0mm x 6M 1/2 ( YELLOW )' : {
+		'Code' : 'PB12' ,
+		'SheetID' : 'here' ,
+		'Range' : 'API_Mapping!A65:F70'
+	} ,
+	'Plain Round Bar 16.0mm x 6M 5/8 (YELLOW)' : {
+		'Code' : 'PB58' ,
+		'SheetID' : 'here' ,
+		'Range' : 'API_Mapping!A65:F70'
+	} ,
+	'Square Bar 12mm x 6M(Y)' : {
+		'Code' : 'SQBY' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' , 
+		'Range' : 'API_Mapping!A72:H76'
+	},
+	'Square Bar 12mm x 6M(B)' : {
+		'Code' : 'SQBB' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' , 
+		'Range' : 'API_Mapping!A72:H76'
+	},
+	'Square Bar 12mm x 6M(W)' : {
+		'Code' : 'SQBW' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' , 
+		'Range' : 'API_Mapping!A72:H76'
+	},
+	'Square Bar 16mm x 6M( R )' : {
+		'Code' : 'SQBR' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' , 
+		'Range' : 'API_Mapping!A72:H76'
+	},
+	'C-purlins 2 x 3 x 6M(1.2mm)(G.I.)' : {
+		'Code' : 'PURLINS2312' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A78:F88'
+	} ,
+	'C-purlins 2 x 4 x 6M(1.2mm)(G.I.)' : {
+		'Code' : 'PURLINS2412' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A78:F88'
+	} ,
+	'C-purlins 2 x 6 x 6M(1.2mm)(G.I.)' : {
+		'Code' : 'PURLINS2612' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A78:F88'
+	} ,
+	'C-purlins 2 x 8 x 6M(1.2mm)(G.I.)' : {
+		'Code' : 'PURLINS2812' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A78:F88'
+	} ,
+	'C-purlins 2 x 10 x 6M(1.2mm)(G.I.)' : {
+		'Code' : 'PURLINS21012' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A78:F88'
+	} ,
+	'C-purlins 2 x 3 x 6M(1.5mm)(G.I.)' : {
+		'Code' : 'PURLINS2315' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A78:F88'
+	} ,
+	'C-purlins 2 x 4 x 6M(1.5mm)(G.I.)' : {
+		'Code' : 'PURLINS2415' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A78:F88'
+	} ,
+	'C-purlins 2 x 6 x 6M(1.5mm)(G.I.)' : {
+		'Code' : 'PURLINS2615' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A78:F88'
+	} ,
+	'C-purlins 2 x 8 x 6M(1.5mm)(G.I.)' : {
+		'Code' : 'PURLINS2815' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A78:F88'
+	} ,
+	'C-purlins 2 x 10 x 6M(1.5mm)(G.I.)' : {
+		'Code' : 'PURLINS21015' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A78:F88'
+	},
+	'Channel Bar 3 x 6M (Light Duty)' : {
+		'Code' : 'CHB3LD' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A90:F95'
+	},
+	'Channel Bar 3 x 6M (Heavy Duty)' : {
+		'Code' : 'CHB3HD' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A90:F95'
+	},
+	'Channel Bar 4 x 6M' : {
+		'Code' : 'CHB4' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A90:F95'
+	},
+	'Channel Bar 5 x 6M' : {
+		'Code' : 'CHB5' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A90:F95'
+	},
+	'Channel Bar 6 x 6M' : {
+		'Code' : 'CHB6' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A90:F95'
+	},
+		'Square Tube 1 x 1(1.2mm)(G.I.)' : {
+		'Code' : 'SQTUBE1112' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A97:F111'
+	} ,
+	'Square Tube 1 x 2(1.2mm)(G.I.)' : {
+		'Code' : 'SQTUBE1212' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A97:F111'
+	} ,
+	'Square Tube 1 1/2 x 1 1/2(1.2mm)(G.I.)' : {
+		'Code' : 'SQTUBE11211212' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A97:F111'
+	} ,
+	'Square Tube 2 x 2(1.2mm)(G.I.)' : {
+		'Code' : 'SQTUBE2212' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A97:F111'
+	} ,
+	'Square Tube 2 x 3(1.2mm)(yellow)' : {
+		'Code' : 'SQTUBE2312' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A97:F111'
+	} ,
+	'Square Tube 2 x 4(1.2mm)(G.I.)' : {
+		'Code' : 'SQTUBE2412' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A97:F111'
+	} ,
+	'Square Tube 2 x 6(1.2mm)(G.I.)' : {
+		'Code' : 'SQTUBE2612' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A97:F111'
+	} ,
+	'Square Tube 1 x 1(1.5mm)(G.I.)' : {
+		'Code' : 'SQTUBE1115' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A97:F111'
+	} ,
+	'Square Tube 1 x 2(1.5mm)(G.I.)' : {
+		'Code' : 'SQTUBE1215' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A97:F111'
+	} ,
+	'Square Tube 1 1/2 x 1 1/2(1.5mm)(G.I.)' : {
+		'Code' : 'SQTUBE11211215' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A97:F111'
+	} ,
+	'Square Tube 2 x 2(1.5mm)(G.I.)' : {
+		'Code' : 'SQTUBE2215' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A97:F111'
+	} ,
+	'Square Tube 2 x 3(1.5mm)(G.I.)' : {
+		'Code' : 'SQTUBE2315' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A97:F111'
+	} ,
+	'Square Tube 2 x 4(1.5mm)(G.I.)' : {
+		'Code' : 'SQTUBE2415' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A97:F111'
+	} ,
+	'Square Tube 2 x 6(1.5mm)(G.I.)' : {
+		'Code' : 'SQTUBE2615' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A97:F111'
+	} ,
+	'Checkered Plate 2.0mm x 4 x 8' : {
+		'Code' : 'CHECK2' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A113:D129'
+	} ,
+	'BI Sheet 2.0mm x 4 x 8' : {
+		'Code' : 'BI2' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A113:D129'
+	} ,
+	'BI Sheet 5.0mm x 4 x 8' : {
+		'Code' : 'BI5' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A113:D129'
+	} ,
+	'#24 x 4 x 8(0.5mm)(Apo)' : {
+		'Code' : 'APO05' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A113:D129'
+	} ,
+	'#22 x 4 x 8(0.7mm)(Apo)' : {
+		'Code' : 'APO07' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A113:D129'
+	} ,
+	'#20 x 4 x 8(0.9mm)(Apo)' : {
+		'Code' : 'APO09' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A113:D129'
+	} ,
+	'#18 x 4 x 8(1.0mm)(Apo)' : {
+		'Code' : 'APO10' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A113:D129'
+	} ,
+	'#18 x 4 x 8(1.1mm)(Apo)' : {
+		'Code' : 'APO11' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A113:D129'
+	} ,
+	'#18 x 4 x 8(1.2mm)(Apo)' : {
+		'Code' : 'APO12' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A113:D129'
+	} ,
+	'#16 x 4 x 8(1.4mm)(Apo)' : {
+		'Code' : 'APO14' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A113:D129'
+	} ,
+	'#15 x 4 x 8(1.6mm)(Apo)' : {
+		'Code' : 'APO16' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A113:D129'
+	} ,
+	'#18 x 4 x 8(1.0mm)(Ultrabond)' : {
+		'Code' : 'SUMO10' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A113:D129'
+	} ,
+	'#18 x 4 x 8(1.1mm)(Ultrabond)' : {
+		'Code' : 'SUMO11' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A113:D129'
+	} ,
+	'#16 x 4 x 8(1.3mm)(Ultrabond)' : {
+		'Code' : 'SUMO13' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A113:D129'
+	} ,
+	'#16 x 4 x 8(1.4mm)(Ultrabond)' : {
+		'Code' : 'SUMO14' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A113:D129'
+	} ,
+	'#15 x 4 x 8(1.5mm)(Ultrabond)' : {
+		'Code' : 'SUMO15' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A113:D129'
+	} ,
+	'Z-bar 3/4 x 6M(Lunar)' : {
+		'Code' : 'ZBAR34' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A131:A136'
+	} ,
+	'Z-bar 7/8 x 6M(Lunar)' : {
+		'Code' : 'ZBAR78' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A131:A136'
+	} ,
+	'I-bar 5/8 x 6M(Lunar)' : {
+		'Code' : 'IBAR58L' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A131:A136'
+	} ,
+	'I-bar 5/8 x 6M(Ord.)' : {
+		'Code' : 'IBAR58' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A131:A136'
+	} ,
+	'T-bar 3/4 x 6M' : {
+		'Code' : 'TBAR' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A131:A136'
+	} ,
+	'BI Pipe 1/2 S-20' : {
+		'Code' : 'BI1220' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A138:G163'
+	} ,
+	'BI Pipe 3/4 S-20' : {
+		'Code' : 'BI3420' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A138:G163'
+	} ,
+	'BI Pipe 1 S-20' : {
+		'Code' : 'BI120' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A138:G163'
+	} ,
+	'BI Pipe 1 1/4 S-20' : {
+		'Code' : 'BI11420' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A138:G163'
+	} ,
+	'BI Pipe 1 1/2 S-20' : {
+		'Code' : 'BI11220' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A138:G163'
+	} ,
+	'BI Pipe 2 S-20' : {
+		'Code' : 'BI220' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A138:G163'
+	} ,
+	'BI Pipe 1 S-40' : {
+		'Code' : 'BI140' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A138:G163'
+	} ,
+	'GI Pipe 1/2 S-20' : {
+		'Code' : 'GI1220' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A138:G163'
+	} ,
+	'GI Pipe 3/4 S-20' : {
+		'Code' : 'GI3420' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A138:G163'
+	} ,
+	'GI Pipe 1 S-20' : {
+		'Code' : 'GI120' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A138:G163'
+	} ,
+	'GI Pipe 1 1/4 S-20' : {
+		'Code' : 'GI11420' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A138:G163'
+	} ,
+	'GI Pipe 1 1/2 S-20' : {
+		'Code' : 'GI11220' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A138:G163'
+	} ,
+	'GI Pipe 2 S-20' : {
+		'Code' : 'GI220' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A138:G163'
+	} ,
+	'GI Pipe 2 1/2 S-20' : {
+		'Code' : 'GI21220' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A138:G163'
+	} ,
+	'GI Pipe 3 S-20' : {
+		'Code' : 'GI320' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A138:G163'
+	} ,
+	'GI Pipe 4 S-20' : {
+		'Code' : 'GI420' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A138:G163'
+	} ,
+	'GI Pipe 1/2 S-40' : {
+		'Code' : 'GI1240' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A138:G163'
+	} ,
+	'GI Pipe 3/4 S-40' : {
+		'Code' : 'GI3440' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A138:G163'
+	} ,
+	'GI Pipe 1 S-40' : {
+		'Code' : 'GI140' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A138:G163'
+	} ,
+	'GI Pipe 1 1/4 S-40' : {
+		'Code' : 'GI11440' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A138:G163'
+	} ,
+	'GI Pipe 1 1/2 S-40' : {
+		'Code' : 'GI11240' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A138:G163'
+	} ,
+	'GI Pipe 2 S-40' : {
+		'Code' : 'GI240' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A138:G163'
+	} ,
+	'GI Pipe 2 1/2 S-40' : {
+		'Code' : 'GI21240' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A138:G163'
+	} ,
+	'GI Pipe 3 S-40' : {
+		'Code' : 'GI340' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A138:G163'
+	} ,
+	'GI Pipe 4 S-40' : {
+		'Code' : 'GI440' ,
+		'SheetID' : '1RRUs_sE1YetnkxKy3kruscUJoIZtOQx-PQtk0Ei7RY8' ,
+		'Range' : 'API_Mapping!A138:G163'
+	}
 }

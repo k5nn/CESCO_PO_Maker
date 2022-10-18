@@ -61,8 +61,17 @@ let test_obj = {
 						tbody_row()
 				footer()
 					generic_container( 
-						{ id : "footer_details_container" , horizontal : true , parent : document.querySelector( "#footer" ) } 
+						{ id : "footer_details_container" , horizontal : true , parent : document.querySelector( "#footer" ) }
 					)
+						generic_container(
+							{ id : "count_container" , horizontal : true , parent : document.querySelector( "#footer_details_container" ) }
+						)
+							generic_label(
+								{ id : "count_label" , 
+								  innerHTML : `${stateObj[route].data.length} items` ,
+								  parent : document.querySelector( "#count_container" )
+								}
+							)
 						generic_container( 
 							{ id : "signature_container" , horizontal : true , parent : document.querySelector( "#footer_details_container" ) } 
 						)
