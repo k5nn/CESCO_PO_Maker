@@ -242,6 +242,11 @@ app.post( '/retrieve_records' , ( req , res ) => {
 
     fs.readdir( data_dir , ( err , files ) => {
 
+      if ( files.length == 0 ) {
+        res.status( 400 ).json( { message : `No Records` } )
+        return
+      }
+
       for (file_cnt in files) {
 
         let current_file = files[ file_cnt ]
@@ -274,11 +279,6 @@ app.post( '/retrieve_records' , ( req , res ) => {
                     sorted_res_arr.push( obj )
                   }
                 }
-              }
-
-              if (sorted_res_arr.length == 0) {
-                res.status( 400 ).json( { message : `No Results` } )
-                return
               }
 
               res.status( 200 ).json( { gt : resp_gt.toFixed( 2 ) , data : sorted_res_arr } )
