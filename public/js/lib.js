@@ -213,7 +213,12 @@ function add_qty() {
 		state_handler( { key : "tx_total" , operation : "update" , value : parseFloat( gt ).toFixed( 2 ) } )
 		document.querySelector( "#total_field" ).innerHTML = ""
 		document.querySelector( "#total_field" ).innerHTML = parseFloat( gt ).toFixed( 2 )
-		save_tx( true )
+
+		if ( route == "make_tx" ) {
+			save_tx( true )
+		} else if ( route == "load_tx" ) {
+			overwrite_tx( true )
+		}
 	}
 
 }
@@ -298,7 +303,12 @@ function add_rate() {
 		state_handler( { key : "tx_total" , operation : "update" , value : parseFloat( gt ).toFixed( 2 ) } )
 		document.querySelector( "#total_field" ).innerHTML = ""
 		document.querySelector( "#total_field" ).innerHTML = parseFloat( gt ).toFixed( 2 )
-		save_tx( true )
+
+		if ( route == "make_tx" ) {
+			save_tx( true )
+		} else if ( route == "load_tx" ) {
+			overwrite_tx( true )
+		}
 	}
 }
 
@@ -342,7 +352,12 @@ function add_price() {
 		state_handler( { key : "tx_total" , operation : "update" , value : parseFloat( gt ).toFixed( 2 ) } )
 		document.querySelector( "#total_field" ).innerHTML = ""
 		document.querySelector( "#total_field" ).innerHTML = parseFloat( gt ).toFixed( 2 )
-		save_tx( true )
+
+		if ( route == "make_tx" ) {
+			save_tx( true )
+		} else if ( route == "load_tx" ) {
+			overwrite_tx( true )
+		}
 	}
 
 }
@@ -474,7 +489,12 @@ function add_entry( item_arr , id ) {
 		document.querySelector( '#add_rate' ).disabled = true
 
 		state_handler( { key : "data" , operation : "create" , value : add_row_params } )
-		save_tx( true )
+
+		if ( route == "make_tx" ) {
+			save_tx( true )
+		} else if ( route == "load_tx" ) {
+			overwrite_tx( true )
+		}
 
 		if ( document.querySelector( "#count_label" ) ) {
 			document.querySelector( "#count_label" ).innerHTML = `${stateObj[route].data.length} items`
@@ -497,7 +517,12 @@ function remove_entry() {
 		? document.querySelector( "#total_field" ).innerHTML = ""
 		: document.querySelector( "#total_field" ).innerHTML = (current_tot - parseFloat( minus_val )).toFixed( 2 )
 	state_handler( { key : "tx_total" , operation : "update" , value : parseFloat( document.querySelector( "#total_field" ).innerHTML ).toFixed( 2 ) } )
-	save_tx( true )
+
+	if ( route == "make_tx" ) {
+		save_tx( true )
+	} else if ( route == "load_tx" ) {
+		overwrite_tx( true )
+	}
 
 	if ( document.querySelector( "#count_label" ) ) {
 		document.querySelector( "#count_label" ).innerHTML = `${stateObj[route].data.length} items`
@@ -647,7 +672,7 @@ function search_tx() {
 	})
 }
 
-function overwrite_tx() {
+function overwrite_tx( suppress ) {
 	const overwrite_params = {
 		number : document.querySelector( "#tx_no_field" ).value ,
 		owner : document.querySelector( "#tx_owner_field" ).value ,
@@ -661,6 +686,9 @@ function overwrite_tx() {
 
 	fetch( "/overwrite_tx" , params ).then( res => {
 		res.json().then( json => {
+
+			if ( suppress ) { return }
+
 			alert( json.message )
 		})
 	})
