@@ -700,6 +700,8 @@ function query_txs() {
 		return
 	}
 
+	document.querySelector( "#search_button" ).disabled = true
+
 	const query_params = {
 		owner : document.querySelector( "#tx_owner_field" ).value ,
 	}
@@ -711,6 +713,9 @@ function query_txs() {
 
 	fetch( "/retrieve_records" , params ).then( res => {
 		res.json().then( json => {
+
+			document.querySelector( "#search_button" ).disabled = false
+
 			if ( json.hasOwnProperty( "message" ) ) {
 				alert( json.message )
 				return
