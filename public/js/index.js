@@ -54,7 +54,7 @@ let test_obj = {
 								{ id : "date_label" , innerHTML : "Date :&nbsp" , parent : document.querySelector( "#date_container" ) }
 							)
 							date_field()
-				tx_table()
+				tx_table( false )
 					tx_table_header()
 						thead_row()
 					tx_table_body()
