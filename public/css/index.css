@@ -36,6 +36,9 @@ input , button { font-size: 24px; }
 	align-items:  center;
 	justify-content: center;
 }
+.hidden_container {
+	display: none;
+}
 .form_container { margin: 5px 0px; }
 .form_label { width : 210px; }
 .form_field { width : 240px; }
@@ -69,7 +72,10 @@ input , button { font-size: 24px; }
 
 #signature_label { text-align: center; margin-top: 5px; }
 
-#controls_container > button { width: 200px; }
+#controls_container { align-items: flex-end;  }
+#controls_container > button { width: 200px;  }
+
+#print_modifiers > .print_checkboxes { padding-bottom: 5px; }
 
 @media print {
 	/*#Actions , #add_row , #controls , #routes , .actions { display: none; }*/
