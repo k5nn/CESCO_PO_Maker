@@ -91,7 +91,10 @@ app.post( '/price' , ( req , res ) => {
       }
 
       sheets.spreadsheets.values.get( config , ( err , oauth_res ) => {
-        if (err) return console.log('The API returned an error: ' + err);
+        if (err) {
+          console.log('The API returned an error: ' + err)
+          return res.status( 500 ).json( { "Error" : err } )
+        }
 
         const rows = oauth_res.data.values
         const keys = rows[ 0 ]
@@ -105,6 +108,10 @@ app.post( '/price' , ( req , res ) => {
 
             for (val in vals) {
               retobj[ keys[ val ] ] = vals[ val ]
+            }
+
+            if ( req.body.hasOwnProperty( "table_index" ) ) {
+              retobj[ "table_index" ] = req.body.table_index
             }
 
             res.status( 200 ).json( retobj )
