@@ -344,7 +344,6 @@ app.get( '/*' , (req , res) => {
   res.sendFile( BASE_DIR + '/index.html' )
 })
 
-
 app.listen( port, "127.0.0.1" , () => {
   console.log(`Example app listening on port localhost:${port}`)
 })
@@ -352,4 +351,10 @@ app.listen( port, "127.0.0.1" , () => {
 // app.listen( port, network_info.wlp1s0[ 0 ] , () => {
 //   console.log(`Example app listening on port ${network_info.wlp1s0[ 0 ]} ${port}`)
 // })
+
+app.listen( port, "0.0.0.0" , () => {
+  console.log(`Example app listening on port ${network_info.wlan0[ 0 ]} ${port}
+command to start : node index
+command to stop : Ctrl + C`)
+})
 //app
