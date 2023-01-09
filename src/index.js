@@ -10,6 +10,7 @@ const network_info = {}
 const port = 3000
 
 const SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly'];
+// const BASE_DIR = '/data/data/com.termux/files/home/CESCO_PO_Maker'
 const BASE_DIR = '/home/kennedy/Projects/po_maker'
 const ACTIVE_DIR = `${BASE_DIR}/public/data/Active`
 const TOKEN_PATH = `${BASE_DIR}/src/token.json`;
