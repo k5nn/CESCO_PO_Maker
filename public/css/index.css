@@ -62,6 +62,7 @@ input , button { font-size: 24px; }
 
 #tx_table_body > tr > td { border: 1px solid black; height: 40px; vertical-align: middle; text-align: center; }
 #tx_table_body > tr > td :not(input[ list = "items" ] , button) { width: 100px; }
+#tx_table_body > tr > td > input[ list = "items" ]{ width: 500px }
 
 #footer {
 	display: flex;
@@ -108,5 +109,6 @@ input , button { font-size: 24px; }
 	#name_input_container { align-content : center; }
 	#tx_table_body > tr > td { border: 1px solid black; height: 20px; vertical-align: middle; text-align: center; }
 	#tx_table_body > tr > td :not(input[ list = "items" ] , button) { width: 50px; }
+	#tx_table_body > tr > td > input[ list = "items" ]{ width: 320px }
 
 }
