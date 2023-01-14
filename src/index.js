@@ -10,6 +10,8 @@ const network_info = {}
 const port = 3000
 
 const SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly'];
+const PROD_BASE_DIR = '/data/data/com.termux/files/home/CESCO_PO_Maker'
+const DEV_BASE_DIR = '/data/data/com.termux/files/home/staging/CESCO_PO_Maker'
 // const BASE_DIR = '/data/data/com.termux/files/home/CESCO_PO_Maker'
 const BASE_DIR = '/home/kennedy/Projects/po_maker'
 const ACTIVE_DIR = `${BASE_DIR}/public/data/Active`
@@ -346,7 +348,7 @@ app.get( '/*' , (req , res) => {
 })
 
 app.listen( port, "127.0.0.1" , () => {
-  console.log(`Example app listening on port localhost:${port}`)
+ console.log(`Example app listening on port localhost:${port}`)
 })
 
 // app.listen( port, network_info.wlp1s0[ 0 ] , () => {
@@ -354,8 +356,15 @@ app.listen( port, "127.0.0.1" , () => {
 // })
 
 // app.listen( port, "0.0.0.0" , () => {
-//   console.log(`Example app listening on port ${network_info.wlan0[ 0 ]} ${port}
-// command to start : node index
-// command to stop : Ctrl + C`)
+
+//   console.log( `Listing on the ff
+//     ` )
+//   for( interface in network_info ) {
+//     console.log( `${network_info[ interface ][ 0 ]}:${port}` )
+//   }
+//   console.log( `
+//   command to state : node index
+//   command to stop : Ctrl + C` )
+
 // })
 //app
