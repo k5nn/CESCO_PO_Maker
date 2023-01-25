@@ -343,16 +343,20 @@ app.get( '/*' , (req , res) => {
   res.sendFile( BASE_DIR + '/index.html' )
 })
 
-app.listen( port, "0.0.0.0" , () => {
-
-  console.log( `Listing on the ff
-    ` )
-  for( interface in network_info ) {
-    console.log( `${network_info[ interface ][ 0 ]}:${port}` )
-  }
-  console.log( `
-  command to state : node index
-  command to stop : Ctrl + C` )
-
+app.listen( port, "127.0.0.1" , () => {
+ console.log(`Example app listening on port localhost:${port}`)
 })
+
+// app.listen( port, "0.0.0.0" , () => {
+
+//   console.log( `Listing on the ff
+//     ` )
+//   for( interface in network_info ) {
+//     console.log( `${network_info[ interface ][ 0 ]}:${port}` )
+//   }
+//   console.log( `
+//   command to state : node index
+//   command to stop : Ctrl + C` )
+
+// })
 //app
