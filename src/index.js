@@ -113,10 +113,6 @@ app.post( '/price' , ( req , res ) => {
               retobj[ keys[ val ] ] = vals[ val ]
             }
 
-            if ( req.body.hasOwnProperty( "table_index" ) ) {
-              retobj[ "table_index" ] = req.body.table_index
-            }
-
             res.status( 200 ).json( retobj )
 
             break
