@@ -60,7 +60,10 @@ input , button { font-size: 24px; }
 #tx_table_header > tr > :nth-child( 6 ) { width: 7.5%; }
 #tx_table_header > tr > :nth-child( 7 ) { width: 15%; }
 
-#tx_table_body > tr > td { border: 1px solid black; height: 40px; vertical-align: middle; text-align: center; }
+#tx_table_body > tr > td { border: 1px solid black; height: 40px; vertical-align: middle; }
+#tx_table_body > tr > :nth-child( 1 ) { text-align: center }
+#tx_table_body > tr > :nth-child( 4 ) { text-align: center }
+#tx_table_body > tr > :nth-child( 7 ) { text-align: center }
 #tx_table_body > tr > td :not(input[ list = "items" ] , button) { width: 100px; }
 #tx_table_body > tr > td > input[ list = "items" ]{ width: 500px }
 
@@ -92,7 +95,7 @@ input , button { font-size: 24px; }
 	input { 
 		border: none;
 		color : black;
-		font-size: 16px;
+		font-size: 14px;
 	}
 
 	input::-webkit-outer-spin-button,
@@ -100,15 +103,20 @@ input , button { font-size: 24px; }
 	  -webkit-appearance: none;
 	  margin: 0;
 	}
+	input::-webkit-calendar-picker-indicator {
+	  display: none;
+	}
 	input[type=number] {
 	  -moz-appearance: textfield;
 	}
 
-	td > input { text-align: center; }
-
 	#name_input_container { align-content : center; }
-	#tx_table_body > tr > td { border: 1px solid black; height: 20px; vertical-align: middle; text-align: center; }
-	#tx_table_body > tr > td :not(input[ list = "items" ] , button) { width: 50px; }
-	#tx_table_body > tr > td > input[ list = "items" ]{ width: 320px }
+	#tx_table_body > tr > td { border: 1px solid black; height: 20px; vertical-align: middle; }
+	#tx_table_body > tr > :nth-child( 2 ) > input { text-align: center }
+	#tx_table_body > tr > :nth-child( 3 ) > input { text-align: center }
+	#tx_table_body > tr > :nth-child( 4 ) > input { text-align: center }
+	#tx_table_body > tr > :nth-child( 7 ) { text-align: center }
+	#tx_table_body > tr > td :not(input[ list = "items" ] , button) { width: 75px; }
+	#tx_table_body > tr > td > input[ list = "items" ]{ width: 320px ; }
 
 }
