@@ -60,7 +60,7 @@ input , button { font-size: 24px; }
 #tx_table_header > tr > :nth-child( 6 ) { width: 7.5%; }
 #tx_table_header > tr > :nth-child( 7 ) { width: 15%; }
 
-#tx_table_body > tr > td { border: 1px solid black; height: 40px; vertical-align: middle; }
+#tx_table_body > tr > td { border: 1px solid black; height: 40px; vertical-align: middle; text-align: center; }
 #tx_table_body > tr > :nth-child( 1 ) { text-align: center }
 #tx_table_body > tr > :nth-child( 4 ) { text-align: center }
 #tx_table_body > tr > :nth-child( 7 ) { text-align: center }
@@ -110,10 +110,10 @@ input , button { font-size: 24px; }
 	  -moz-appearance: textfield;
 	}
 
-	td > * { text-align: center ; font-size : 14px }
+	td > * { text-align: center }
 
 	#name_input_container { align-content : center; }
-	#tx_table_body > tr > td { border: 1px solid black; height: 20px; vertical-align: middle; }
+	#tx_table_body > tr > td { border: 1px solid black; height: 20px; vertical-align: middle; text-align: center; }
 	#tx_table_body > tr > td :not(input[ list = "items" ] , button) { width: 75px; }
 	#tx_table_body > tr > td > input[ list = "items" ]{ width: 320px ; }
 
