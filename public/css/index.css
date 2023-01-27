@@ -110,7 +110,7 @@ input , button { font-size: 24px; }
 	  -moz-appearance: textfield;
 	}
 
-	td > * { text-align: center }
+	td > * { text-align: center ; font-size : 14px }
 
 	#name_input_container { align-content : center; }
 	#tx_table_body > tr > td { border: 1px solid black; height: 20px; vertical-align: middle; }
