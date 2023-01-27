@@ -156,10 +156,17 @@ app.post( '/fetch_tx' , ( req , res ) => {
       return
     }
 
-    let regexp = new RegExp( `^${req.body.number}_*` )
+    console.log( req.body.number )
+
+    let regexp = new RegExp( `^${req.body.number}_.*json` )
     let file_name = ""
+
+    console.log( dirdata )
     
     for (file of dirdata) {
+
+      console.log( file )
+
       if ( regexp.test( file ) ) {
         file_name = file
         break
