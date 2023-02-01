@@ -41,7 +41,7 @@ if (history.state) {
 
 //#2 Templating Function
 function node_creator( params ) {
-	const supported_nodes = [ "div" , "th" , "tr" , "td" , "input" , "button" , "thead" , "table" , "tbody" ]
+	const supported_nodes = [ "div" , "th" , "tr" , "td" , "input" , "button" , "thead" , "table" , "tbody" , "datalist" ]
 
 	if ( supported_nodes.includes( params.node_type ) ) {
 			
@@ -123,25 +123,33 @@ function state_handler( params ) {
 
 				params.tx_item -= 2
 
-				// console.log( stateObj[ route ][ params.key ][ params.tx_item ] )
+				let selected_obj = stateObj[ route ][ params.key ][ params.tx_item ][ params.column ]
 
-				if ( JSON.parse( stateObj[ route ][ params.key ][ params.tx_item ][ params.column ] ).hasOwnProperty( "attribs" ) ) {
-					let to_change = JSON.parse( stateObj[ route ][ params.key ][ params.tx_item ][ params.column ] )
-					to_change.attribs.value = params.value
+				if ( JSON.parse( selected_obj ).hasOwnProperty( "attribs" ) ) {
+						let to_change = JSON.parse( selected_obj )
+					if ( typeof(params.value) === "object" ) {
+						to_change = params.value
+					} else {
+						to_change.attribs.value = params.value
+					}
+
 					stateObj[ route ][ params.key ][ params.tx_item ][ params.column ] = JSON.stringify( to_change )
+
 				} else {
 					stateObj[ route ][ params.key ][ params.tx_item ][ params.column ] = params.value
 				}
+
 			} else {
-				// console.log( `state_handler : ${params.value}` )
 				stateObj[ route ][ params.key ] = params.value
 			}
 
 			// console.log( stateObj[ route ][ params.key ] )
 
 		} else if ( params.operation == "delete" ) {
+
 			params.tx_item -= 2
 			stateObj[ route ][ params.key ].splice( params.tx_item , 1 )
+
 		}
 
 	} else {
@@ -206,6 +214,7 @@ function add_qty() {
 	}
 
 	if ( stateObj[ route ].data.length > 0 && tr.id != "add_row" ) {
+		children[ 1 ].childNodes[ 0 ].setAttribute( "value" , event.target.value )
 		state_handler( { key : "data" , operation : "update" , tx_item : tr.rowIndex , column : 1 , value : event.target.value } )
 		state_handler( { key : "data" , operation : "update" , tx_item : tr.rowIndex , column : 6 , value : total.innerHTML } )
 
@@ -223,33 +232,96 @@ function add_qty() {
 
 }
 
+function add_unit() {
+
+	let route = window.location.pathname.split( "/" )[ 1 ]
+	let tr = event.target.parentNode.parentNode
+	let children = tr.childNodes
+
+	if ( tr.id != "add_row" ) {
+		children[ 2 ].childNodes[ 0 ].setAttribute( "value" , event.target.value )
+		state_handler( { key : "data" , operation : "update" , tx_item : tr.rowIndex , column : 2 , value : event.target.value } )
+
+		if ( route == "make_tx" ) {
+			save_tx( true )
+		} else if ( route == "load_tx" ) {
+			overwrite_tx( true )
+		}
+	}
+
+}
+
 function add_item() {
 
+	let route = window.location.pathname.split( "/" )[ 1 ]
+	let tr = event.target.parentNode.parentNode
+	let children = tr.childNodes
+	let total = document.querySelector( "#total_field" )
+	let handler_params = { name : "" , code : "" }
+
 	try {
-		const params = {
+		handler_params.name = JSON.parse( event.target.value ).name
+		handler_params.code = JSON.parse( event.target.value ).code
+	} catch ( err ) {
+		handler_params.name = event.target.value
+	}
+
+	let to_fetch = ( items[ handler_params.name ] === undefined ) ? false : true
+
+	if (document.querySelector( "#prices" ).innerHTML != "") { document.querySelector( "#prices" ).innerHTML = "" }
+
+	if ( tr.id != "add_row" ) {
+
+		children[ 3 ].childNodes[ 0 ].setAttribute( "value" , handler_params.name )
+		children[ 4 ].childNodes[ 0 ].value = ""
+		children[ 5 ].childNodes[ 0 ].setAttribute( "list" , handler_params.code )
+		children[ 5 ].childNodes[ 0 ].value = ""
+		children[ 6 ].innerHTML = parseFloat(0.00).toFixed( 2 )
+		total.innerHTML -= children[ 6 ].innerHTML
+		total.innerHTML = parseFloat( total.innerHTML ).toFixed( 2 )
+		state_handler( { key : "data" , operation : "update" , tx_item : tr.rowIndex , column : 3 , value : handler_params.name } )
+		state_handler( { key : "data" , operation : "update" , tx_item : tr.rowIndex , column : 4 , value : "" } )
+		state_handler( { key : "data" , operation : "update" , tx_item : tr.rowIndex , column : 5 , value : "" } )
+		state_handler( { key : "data" , operation : "update" , tx_item : tr.rowIndex , column : 6 , value : "0.00" } )
+		state_handler( { key : "tx_total" , operation : "update" , value : total.innerHTML } )
+
+	} else if ( tr.id == "add_row" ) {
+
+		children[ 4 ].childNodes[ 0 ].value = handler_params.name
+
+	}
+
+	if ( to_fetch ) {
+		let fetch_body = items[ handler_params.name ]
+		let params = {
 			method : 'POST' ,
-			body : JSON.stringify( items[ JSON.parse( event.target.value ).name ] ) ,
+			body : JSON.stringify(fetch_body) ,
 			headers : { 'content-type' : 'application/json' }
 		}
-		const exp = /^[+-]/
-		event.target.setAttribute( "data-code" , JSON.parse( event.target.value ).code )
-		event.target.value = JSON.parse( event.target.value ).name
+
+		event.target.setAttribute( "data-code" , handler_params.code )
+		event.target.value = handler_params.name
 
 		fetch( '/price' , params ).then( res => {
 			res.json().then( json => {
 
-				let pricelist = document.querySelector( '#prices' )
+				const exp = /^[+-]/
+				let id = ( tr.rowIndex == 1 ) ? "prices" : json.Code
+				let list_present = ( document.querySelector( `#${id}` ) == null ) ? false : true
+				let pricelist = ""
 
-				if (pricelist.innerHTML != "") {
-					pricelist.innerHTML = ""
+				if (list_present == false ) {
+					node_creator( { node_type : "datalist" , id : `${json.Code}` } )
+					pricelist = document.querySelector( `#${json.Code}` )
+				} else {
+					pricelist = document.querySelector( "#prices" )
 				}
 
-				document.querySelector( '#add_price' ).disabled = false
-				document.querySelector( '#add_rate' ).disabled = false
+				if (pricelist.innerHTML != "") { pricelist.innerHTML = "" }
 
 				for (key in json) {
 
-					if (key != "Code" && key != "Name" && json[ key ] != "") {
+					if (key != "Code" && key != "Name" && json[ key ] != "" ) {
 						let option = document.createElement( 'option' )
 
 						if ( exp.test( json[ key ] ) ) {
@@ -264,16 +336,185 @@ function add_item() {
 					}
 				}
 
-			}).catch( err => {
-				document.querySelector( '#add_price' ).disabled = false
-				document.querySelector( '#add_rate' ).disabled = false		
+				if ( list_present == false ) {
+					let update_obj = { 
+						key : "data" , operation : "update" , tx_item : tr.rowIndex , column : 5 , value : {
+							node_type : "input" , 
+							attribs : { value : "" , type : "input" , list : json.Code ,onchange : "add_price()" } ,
+							src_name : json.Code ,
+							src_opts : document.querySelector( `#${json.Code}` ).innerHTML
+						}						
+					}
+					state_handler( update_obj )
+
+					if ( route == "make_tx" ) {
+						save_tx( true )
+					} else if ( route == "load_tx" ) {
+						overwrite_tx( true )
+					}
+				} else {
+					document.querySelector( '#add_price' ).disabled = false
+					document.querySelector( '#add_rate' ).disabled = false
+				}
+
 			})
+		}).catch( err => {
+			document.querySelector( '#add_price' ).disabled = false
+			document.querySelector( '#add_rate' ).disabled = false
 		})
-	} catch( err ) {
-		document.querySelector( '#add_price' ).disabled = false
-		document.querySelector( '#add_rate' ).disabled = false
+
+	} else {
+
+		if ( tr.id != "add_row" ) {
+
+			let update_obj = {
+				key : "data" , operation : "update" , tx_item : tr.rowIndex , column : 5 , value : {
+					node_type : "input" , 
+					attribs : { value : "" , type : "input" , list : "BLANK" , onchange : "add_price()" } ,
+					src_name : "BLANK" ,
+					src_opts : ""
+				}					
+			}
+			state_handler( update_obj )
+
+			if ( route == "make_tx" ) {
+				save_tx( true )
+			} else if ( route == "load_tx" ) {
+				overwrite_tx( true )
+			}
+
+		} else {
+			document.querySelector( '#add_price' ).disabled = false
+			document.querySelector( '#add_rate' ).disabled = false
+		}
+
 	}
 
+	// try {
+	// 	const name = JSON.parse( event.target.value ).name
+	// 	const code = JSON.parse( event.target.value ).code
+	// 	let fetch_body = items[ name ]
+
+	// 	if ( tr.id != "add_row" ) {
+
+	// 		children[ 3 ].childNodes[ 0 ].setAttribute( "value" , name )
+	// 		children[ 5 ].childNodes[ 0 ].setAttribute( "list" , code )
+	// 		children[ 4 ].childNodes[ 0 ].value = ""
+	// 		children[ 5 ].childNodes[ 0 ].value = ""
+	// 		total.innerHTML -= children[6].innerHTML
+	// 		total.innerHTML = parseFloat( total.innerHTML ).toFixed( 2 )
+	// 		children[ 6 ].innerHTML = parseFloat(0.00).toFixed( 2 )
+	// 		state_handler( { key : "data" , operation : "update" , tx_item : tr.rowIndex , column : 3 , value : name } )
+	// 		state_handler( { key : "data" , operation : "update" , tx_item : tr.rowIndex , column : 4 , value : "" } )
+	// 		state_handler( { key : "data" , operation : "update" , tx_item : tr.rowIndex , column : 6 , value : parseFloat(0.00).toFixed( 2 ) } )
+	// 		state_handler( { key : "tx_total" , operation : "update" , value : total.innerHTML } )
+
+	// 		fetch_body.table_index = tr.rowIndex
+
+	// 		if ( !document.querySelector( code ) ) {
+	// 			node_creator( { node_type : "datalist" , id : `${code}` } )
+	// 		}
+	// 	}
+	// 	let params = {
+	// 		method : 'POST' ,
+	// 		body : JSON.stringify(fetch_body) ,
+	// 		headers : { 'content-type' : 'application/json' }
+	// 	}
+
+	// 	event.target.setAttribute( "data-code" , JSON.parse( event.target.value ).code )
+	// 	event.target.value = JSON.parse( event.target.value ).name
+
+	// 	fetch( '/price' , params ).then( res => {
+	// 		res.json().then( json => {
+
+	// 			const exp = /^[+-]/
+	// 			let list_present = ( document.querySelector( `#${json.Code}` ) == null ) 
+	// 				? true
+	// 				: false
+
+	// 			let pricelist = ( list_present )
+	// 				? document.querySelector( '#prices' )
+	// 				: document.querySelector( `#${json.Code}` )
+
+	// 			if (pricelist.innerHTML != "") {
+	// 				pricelist.innerHTML = ""
+	// 			}
+
+	// 			if (list_present) {					
+	// 				document.querySelector( '#add_price' ).disabled = false
+	// 				document.querySelector( '#add_rate' ).disabled = false
+	// 			}
+
+	// 			// console.log( json )
+
+	// 			for (key in json) {
+
+	// 				if (key != "Code" && key != "Name" && json[ key ] != "" && key != "table_index" ) {
+	// 					let option = document.createElement( 'option' )
+
+	// 					if ( exp.test( json[ key ] ) ) {
+	// 						option.value = `{ "rate" : "${json[key]}" , "base" : "${json.BASE}" }`
+	// 						option.innerHTML = `${key} | ${ json[ key ] } | ${json.BASE}`
+	// 					} else {
+	// 						option.value = `{ "rate" : "0" , "base" : "${json[ key ]}" }`
+	// 						option.innerHTML = `${key} | ${ json[ key ] }`
+	// 					}
+
+	// 					pricelist.appendChild( option )
+	// 				}
+	// 			}
+
+	// 			if ( list_present == false ) {
+	// 				let update_obj = { 
+	// 					key : "data" , operation : "update" , tx_item : json.table_index , column : 5 , value : {
+	// 						node_type : "input" , 
+	// 						attribs : { 
+	// 							value : "" , type : "input" , 
+	// 							list : json.Code ,
+	// 							onchange : "add_price()"
+	// 						} ,
+	// 						src_name : json.Code ,
+	// 						src_opts : document.querySelector( `#${json.Code}` ).innerHTML
+	// 					} 
+	// 				}
+	// 				state_handler( 
+	// 					{ 
+	// 						key : "data" , operation : "update" , tx_item : json.table_index , column : 5 , value : {
+	// 							value : "" , list : json.Code , 
+	// 							src_name : json.Code , src_opts : document.querySelector( `#${json.Code}` ).innerHTML
+	// 						}
+	// 					}
+	// 				)
+	// 			}
+	// 		}).catch( err => {
+	// 			document.querySelector( '#add_price' ).disabled = false
+	// 			document.querySelector( '#add_rate' ).disabled = false	
+	// 		})
+	// 	})
+
+	// } catch( err ) {
+
+	// 	if ( tr.id != "add_row" ) {
+
+	// 		// children[ 3 ].childNodes[ 0 ].setAttribute( "value" , event.target.value )
+	// 		// children[ 5 ].childNodes[ 0 ].setAttribute( "list" , "" )
+	// 		// children[ 4 ].childNodes[ 0 ].value = ""
+	// 		// children[ 5 ].childNodes[ 0 ].value = ""
+	// 		// total.innerHTML -= children[6].innerHTML
+	// 		// total.innerHTML = parseFloat( total.innerHTML ).toFixed( 2 )
+	// 		// children[ 6 ].innerHTML = parseFloat(0.00).toFixed( 2 )
+	// 		// state_handler( { key : "data" , operation : "update" , tx_item : tr.rowIndex , column : 3 , value : event.target.value } )
+	// 		// state_handler( { key : "data" , operation : "update" , tx_item : tr.rowIndex , column : 4 , value : "" } )
+	// 		// state_handler( { key : "data" , operation : "update" , tx_item : tr.rowIndex , column : 6 , value : parseFloat(0.00).toFixed( 2 ) } )
+	// 		// state_handler( { key : "tx_total" , operation : "update" , value : total.innerHTML } )
+	// 		console.log( "here" )
+			
+	// 	} else {
+	// 		document.querySelector( '#add_price' ).disabled = false
+	// 		document.querySelector( '#add_rate' ).disabled = false
+	// 	}
+
+	// }
 
 }
 
@@ -296,6 +537,7 @@ function add_rate() {
 	}
 
 	if ( stateObj[ route ].data.length > 0 && tr.id != "add_row" ) {
+		children[ 4 ].childNodes[ 0 ].setAttribute( "value" , event.target.value )
 		state_handler( { key : "data" , operation : "update" , tx_item : tr.rowIndex , column : 4 , value : event.target.value } )
 		state_handler( { key : "data" , operation : "update" , tx_item : tr.rowIndex , column : 6 , value : total.innerHTML } )
 
@@ -345,6 +587,7 @@ function add_price() {
 	}
 
 	if ( stateObj[ route ].data.length > 0 && tr.id != "add_row" ) {
+		children[ 5 ].childNodes[ 0 ].setAttribute( "value" , event.target.value )
 		state_handler( { key : "data" , operation : "update" , tx_item : tr.rowIndex , column : 5 , value : event.target.value } )
 		state_handler( { key : "data" , operation : "update" , tx_item : tr.rowIndex , column : 6 , value : total.innerHTML } )
 
@@ -397,9 +640,6 @@ function add_entry( item_arr , id ) {
 					node_creator( add_elem )
 				}
 			} catch {
-
-				// console.log( 'where' )
-
 				new_td.innerHTML = add_row_params[ item ]
 			}
 
@@ -424,8 +664,18 @@ function add_entry( item_arr , id ) {
 				node_type : "input" , 
 				attribs : { value : children[ 1 ].childNodes[ 0 ].value , type : "number" , onchange : "add_qty()" } 
 			} ,
-			children[ 2 ].childNodes[ 0 ].value ,
-			children[ 3 ].childNodes[ 0 ].value ,
+			{ 
+				node_type : "input" , 
+				attribs : { value : children[ 2 ].childNodes[ 0 ].value , type : "text" , onchange : "add_unit()" } 
+			} ,
+			{ 
+				node_type : "input" , 
+				attribs : { 
+					value : children[ 3 ].childNodes[ 0 ].value , type : "input" , 
+					list : "items" ,
+					onchange : "add_item()"
+				}
+			} ,
 			{ 
 				node_type : "input" , 
 				attribs : { value : children[ 4 ].childNodes[ 0 ].value , type : "number" , onchange : "add_rate()" } 
@@ -442,6 +692,8 @@ function add_entry( item_arr , id ) {
 			} ,
 			parseFloat(children[ 6 ].innerHTML).toFixed( 2 )
 		]
+
+		// console.log( add_row_params )
 
 		let new_row = tbody.insertRow( -1 )
 
@@ -549,6 +801,7 @@ function customer_name() {
 			})
 		})
 	}
+	document.querySelector( "#name_field" ).setAttribute( "value" , event.target.value )
 }
 
 function save_tx( suppress ) {
@@ -622,7 +875,7 @@ function search_tx() {
 								{ id : "date_label" , innerHTML : "Date :&nbsp" , parent : document.querySelector( "#date_container" ) }
 							)
 							date_field()
-				tx_table()
+				tx_table( false )
 					tx_table_header()
 					thead_row()
 				tx_table_body()
@@ -744,7 +997,7 @@ function query_txs() {
 							{ id : "date_label" , innerHTML : "Date :&nbsp" , parent : document.querySelector( "#date_container" ) }
 						)
 						date_field()
-			tx_table()
+			tx_table( false )
 				tx_table_header()
 					thead_row()
 				tx_table_body()
@@ -798,11 +1051,14 @@ function reset_tx() {
 
 		document.querySelector( "#total_field" ).innerHTML = ""
 		document.querySelector( "#name_field" ).value = ""
+		document.querySelector( "#name_field" ).setAttribute( "value" , "" )
 		for( node of document.querySelectorAll( ".add_field" ) ) { node.value = "" }
-
 
 		document.querySelector( "#add_rate" ).disabled = true
 		document.querySelector( "#add_price" ).disabled = true
+		
+		document.querySelector( "#double_print_box" ).checked = false
+		document.querySelector( "#tommorrow_print_box" ).checked = false
 
 	} else if ( route == "load_tx" ) {
 
@@ -813,7 +1069,7 @@ function reset_tx() {
 		document.querySelector( "#tx_owner_field" ).value = ""
 
 		if ( document.querySelector( "#result_header" ) != null ) {
-			document.querySelector( "#content_container" ).removeChild( document.querySelector( "#result_header" ) )	
+			document.querySelector( "#content_container" ).removeChild( document.querySelector( "#result_header" ) )
 		}
 
 		if ( document.querySelector( "#tx_table" ) != null ) {
@@ -859,6 +1115,83 @@ function reset_tx() {
 	if ( document.querySelector( "#count_label" ) ) {
 		document.querySelector( "#count_label" ).innerHTML = `0 items`
 	}
+}
+
+function send_printjob() {
+
+	let route = window.location.pathname.split( "/" )[ 1 ]
+
+	if ( document.querySelector( "#tommorrow_print_box" ) ) {
+		if ( document.querySelector( "#tommorrow_print_box" ).checked ) {
+			let date = new Date()
+			document.querySelector( "#date_field" ).innerHTML = `${date.getMonth() + 1}/${date.getDate() + 1}/${date.getFullYear()}`
+		}
+	}
+
+	if ( document.querySelector( "#today_print_box" ) ) {
+		if ( document.querySelector( "#today_print_box" ).checked ) {
+			let date = new Date()
+			document.querySelector( "#date_field" ).innerHTML = `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`
+		}
+	}
+
+	if ( document.querySelector( "#double_print_box" ) ) {
+		if ( document.querySelector( "#double_print_box" ).checked || route == "collect_tx" ) {
+
+			let bottom_margin = ( ( 19-stateObj[route].data.length ) * 20 )
+
+			generic_container( { 
+				id : "carbon_header"  , 
+				parent : document.querySelector( "#content_container" )
+			} )
+
+			if ( route == "make_tx" ) { 
+				document.querySelector( "#carbon_header" ).innerHTML = document.querySelector( "#header" ).innerHTML 
+			} else if ( route == "load_tx" || route == "collect_tx" ) {
+				document.querySelector( "#carbon_header" ).innerHTML = document.querySelector( "#result_header" ).innerHTML
+			}
+
+			tx_table( true )
+			document.querySelector( "#carbon_table" ).innerHTML = document.querySelector( "#tx_table" ).innerHTML
+			generic_container( { 
+				id : "carbon_footer"  , 
+				parent : document.querySelector( "#content_container" )
+			} )
+
+			document.querySelector( "#carbon_footer" ).innerHTML = document.querySelector( "#footer" ).innerHTML
+
+			document.querySelector( "#tx_table" ).setAttribute( "style" , `margin-bottom:${bottom_margin}px` )
+			document.querySelector( "#carbon_table" ).setAttribute( "style" , `margin-bottom:${bottom_margin}px` )
+
+		}
+	}
+
+	window.print()
+
+	if ( document.querySelector( "#tommorrow_print_box" ) ) {
+		if ( document.querySelector( "#tommorrow_print_box" ).checked ) {
+			let date = new Date()
+			document.querySelector( "#date_field" ).innerHTML = `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`
+		}
+	}
+
+	if ( document.querySelector( "#today_print_box" ) ) {
+		if ( document.querySelector( "#today_print_box" ).checked ) {
+			document.querySelector( "#date_field" ).innerHTML = stateObj[ route ].tx_date 
+		}
+	}
+
+	if ( document.querySelector( "#double_print_box" ) ) {
+		if ( document.querySelector( "#double_print_box" ).checked || route == "collect_tx" ) {
+
+			document.querySelector( "#tx_table" ).setAttribute( "style" , "margin-bottom:0px" )
+
+			document.querySelector( "#content_container" ).removeChild( document.querySelector( "#carbon_header" ) )
+			document.querySelector( "#content_container" ).removeChild( document.querySelector( "#carbon_table" ) )
+			document.querySelector( "#content_container" ).removeChild( document.querySelector( "#carbon_footer" ) )
+		}
+	}
+
 }
 //#3.4 UI Handlers
 
@@ -937,6 +1270,10 @@ function date_field() {
 		parent : document.querySelector( "#date_container" )
 	}
 
+	if ( route == "load_tx" ) {
+		date_field.innerHTML = stateObj[ route ].tx_date
+	}
+
 	if ( route == "collect_tx" ) {
 		date_field.innerHTML = `${date.getMonth() + 1}/${date.getDate() + 1}/${date.getFullYear()}`
 	}
@@ -989,9 +1326,12 @@ function total_field() {
 //#4.2 Feild Components
 
 //#4.3 Table Components
-function tx_table() {
+function tx_table( bool_carbon ) {
+
+	let table_id = ( bool_carbon == false ) ? "tx_table" : "carbon_table"
+
 	let tx_table = {
-		id : "tx_table" ,
+		id : table_id ,
 		node_type : "table" , parent : document.querySelector( "#content_container" )
 	}
 	node_creator( tx_table )
@@ -1105,10 +1445,55 @@ function save_button() {
 }
 
 function print_button() {
+	let route = window.location.pathname.split( "/" )[ 1 ]
+	generic_container( { id : "print_controls" , parent : document.querySelector( "#controls_container" ) } )
+	generic_container( { id : "print_modifiers" , parent : document.querySelector( "#print_controls" ) } )
+
+	let double_container = { 
+		id : "double_container" , class : "print_checkboxes" , 
+		horizontal : true , 
+		parent : document.querySelector( "#print_modifiers" )
+	} 
+
+	if ( route == "collect_tx" ) { double_container.hidden = true }
+
+	generic_container( double_container )
+	let double_print_box = {
+		id : "double_print_box" ,
+		attribs : { type : "checkbox" } ,
+		node_type : "input" , parent : document.querySelector( "#double_container" )
+	}
+	node_creator( double_print_box )
+	generic_label( { innerHTML : "Double Print" , parent : document.querySelector( "#double_container" ) } )
+
+	if ( route == "make_tx" ) {
+		generic_container( 
+			{ id : "tommorrow_container" , class : "print_checkboxes" , horizontal : true , parent : document.querySelector( "#print_modifiers" ) } 
+		)
+		let tommorrow_print_box = {
+			id : "tommorrow_print_box" ,
+			attribs : { type : "checkbox" } ,
+			node_type : "input" , parent : document.querySelector( "#tommorrow_container" )
+		}
+		node_creator( tommorrow_print_box )
+		generic_label( { innerHTML : "Tommorrow" , parent : document.querySelector( "#tommorrow_container" ) } )
+	} else if ( route == "load_tx" ) {
+		generic_container( 
+			{ id : "today_container" , class : "print_checkboxes" , horizontal : true , parent : document.querySelector( "#print_modifiers" ) } 
+		)
+		let today_print_box = {
+			id : "today_print_box" ,
+			attribs : { type : "checkbox" } ,
+			node_type : "input" , parent : document.querySelector( "#today_container" )
+		}
+		node_creator( today_print_box )
+		generic_label( { innerHTML : "Change Date to Today" , parent : document.querySelector( "#today_container" ) } )		
+	}
+
 	let print_button = {
 		id : "print_button" ,
-		attribs : { onclick : "window.print()" } ,
-		node_type : "button" , innerHTML : "Print" , parent : document.querySelector( "#controls_container" ) 
+		attribs : { onclick : "send_printjob()" } ,
+		node_type : "button" , innerHTML : "Print" , parent : document.querySelector( "#print_controls" ) 
 	}
 	node_creator( print_button )
 }
@@ -1141,30 +1526,31 @@ function collect_button() {
 function generic_container( modifier ) {
 
 	let class_array = []
-	let to_push = ( modifier.horizontal == true ) ? "horizontal_container" : "vertical_container"
-
-	if ( modifier.hasOwnProperty( "class" ) ) { class_array = modifier.class }
-
-	class_array.push( to_push )
+	class_array.push( ( modifier.horizontal == true ) ? "horizontal_container" :  "vertical_container" )
 
 	if ( modifier.centered == true ) { class_array.push( "center_container" ) }
 
+	if ( modifier.hidden == true ) { class_array.push( "hidden_container" ) }
+
+	if ( modifier.hasOwnProperty( "class" ) ) { class_array.push( modifier.class ) }
+
 	let generic_container = {
-		id : modifier.id ,
 		class : class_array , node_type : "div" , parent : modifier.parent
 	}
+
+	if ( modifier.hasOwnProperty( "id" ) ) { generic_container.id = modifier.id }
+
 	node_creator( generic_container )
 }
 
 function generic_label( modifier ) {
 	let generic_label = {
-		id : modifier.id ,
 		node_type : "div" , innerHTML : modifier.innerHTML , parent : modifier.parent
 	}
 
-	if ( modifier.hasOwnProperty( "class" ) ) {
-		generic_label.class = modifier.class
-	}
+	if ( modifier.hasOwnProperty( "id" ) ) { generic_label.id = modifier.id }
+
+	if ( modifier.hasOwnProperty( "class" ) ) { generic_label.class = modifier.class }
 
 	node_creator( generic_label )
 }
