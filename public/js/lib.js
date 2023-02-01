@@ -288,6 +288,7 @@ function add_item() {
 	} else if ( tr.id == "add_row" ) {
 
 		children[ 4 ].childNodes[ 0 ].value = handler_params.name
+		children[ 4 ].childNodes[ 0 ].setAttribute( "data-code" , "" )
 
 	}
 
@@ -389,132 +390,6 @@ function add_item() {
 		}
 
 	}
-
-	// try {
-	// 	const name = JSON.parse( event.target.value ).name
-	// 	const code = JSON.parse( event.target.value ).code
-	// 	let fetch_body = items[ name ]
-
-	// 	if ( tr.id != "add_row" ) {
-
-	// 		children[ 3 ].childNodes[ 0 ].setAttribute( "value" , name )
-	// 		children[ 5 ].childNodes[ 0 ].setAttribute( "list" , code )
-	// 		children[ 4 ].childNodes[ 0 ].value = ""
-	// 		children[ 5 ].childNodes[ 0 ].value = ""
-	// 		total.innerHTML -= children[6].innerHTML
-	// 		total.innerHTML = parseFloat( total.innerHTML ).toFixed( 2 )
-	// 		children[ 6 ].innerHTML = parseFloat(0.00).toFixed( 2 )
-	// 		state_handler( { key : "data" , operation : "update" , tx_item : tr.rowIndex , column : 3 , value : name } )
-	// 		state_handler( { key : "data" , operation : "update" , tx_item : tr.rowIndex , column : 4 , value : "" } )
-	// 		state_handler( { key : "data" , operation : "update" , tx_item : tr.rowIndex , column : 6 , value : parseFloat(0.00).toFixed( 2 ) } )
-	// 		state_handler( { key : "tx_total" , operation : "update" , value : total.innerHTML } )
-
-	// 		fetch_body.table_index = tr.rowIndex
-
-	// 		if ( !document.querySelector( code ) ) {
-	// 			node_creator( { node_type : "datalist" , id : `${code}` } )
-	// 		}
-	// 	}
-	// 	let params = {
-	// 		method : 'POST' ,
-	// 		body : JSON.stringify(fetch_body) ,
-	// 		headers : { 'content-type' : 'application/json' }
-	// 	}
-
-	// 	event.target.setAttribute( "data-code" , JSON.parse( event.target.value ).code )
-	// 	event.target.value = JSON.parse( event.target.value ).name
-
-	// 	fetch( '/price' , params ).then( res => {
-	// 		res.json().then( json => {
-
-	// 			const exp = /^[+-]/
-	// 			let list_present = ( document.querySelector( `#${json.Code}` ) == null ) 
-	// 				? true
-	// 				: false
-
-	// 			let pricelist = ( list_present )
-	// 				? document.querySelector( '#prices' )
-	// 				: document.querySelector( `#${json.Code}` )
-
-	// 			if (pricelist.innerHTML != "") {
-	// 				pricelist.innerHTML = ""
-	// 			}
-
-	// 			if (list_present) {					
-	// 				document.querySelector( '#add_price' ).disabled = false
-	// 				document.querySelector( '#add_rate' ).disabled = false
-	// 			}
-
-	// 			// console.log( json )
-
-	// 			for (key in json) {
-
-	// 				if (key != "Code" && key != "Name" && json[ key ] != "" && key != "table_index" ) {
-	// 					let option = document.createElement( 'option' )
-
-	// 					if ( exp.test( json[ key ] ) ) {
-	// 						option.value = `{ "rate" : "${json[key]}" , "base" : "${json.BASE}" }`
-	// 						option.innerHTML = `${key} | ${ json[ key ] } | ${json.BASE}`
-	// 					} else {
-	// 						option.value = `{ "rate" : "0" , "base" : "${json[ key ]}" }`
-	// 						option.innerHTML = `${key} | ${ json[ key ] }`
-	// 					}
-
-	// 					pricelist.appendChild( option )
-	// 				}
-	// 			}
-
-	// 			if ( list_present == false ) {
-	// 				let update_obj = { 
-	// 					key : "data" , operation : "update" , tx_item : json.table_index , column : 5 , value : {
-	// 						node_type : "input" , 
-	// 						attribs : { 
-	// 							value : "" , type : "input" , 
-	// 							list : json.Code ,
-	// 							onchange : "add_price()"
-	// 						} ,
-	// 						src_name : json.Code ,
-	// 						src_opts : document.querySelector( `#${json.Code}` ).innerHTML
-	// 					} 
-	// 				}
-	// 				state_handler( 
-	// 					{ 
-	// 						key : "data" , operation : "update" , tx_item : json.table_index , column : 5 , value : {
-	// 							value : "" , list : json.Code , 
-	// 							src_name : json.Code , src_opts : document.querySelector( `#${json.Code}` ).innerHTML
-	// 						}
-	// 					}
-	// 				)
-	// 			}
-	// 		}).catch( err => {
-	// 			document.querySelector( '#add_price' ).disabled = false
-	// 			document.querySelector( '#add_rate' ).disabled = false	
-	// 		})
-	// 	})
-
-	// } catch( err ) {
-
-	// 	if ( tr.id != "add_row" ) {
-
-	// 		// children[ 3 ].childNodes[ 0 ].setAttribute( "value" , event.target.value )
-	// 		// children[ 5 ].childNodes[ 0 ].setAttribute( "list" , "" )
-	// 		// children[ 4 ].childNodes[ 0 ].value = ""
-	// 		// children[ 5 ].childNodes[ 0 ].value = ""
-	// 		// total.innerHTML -= children[6].innerHTML
-	// 		// total.innerHTML = parseFloat( total.innerHTML ).toFixed( 2 )
-	// 		// children[ 6 ].innerHTML = parseFloat(0.00).toFixed( 2 )
-	// 		// state_handler( { key : "data" , operation : "update" , tx_item : tr.rowIndex , column : 3 , value : event.target.value } )
-	// 		// state_handler( { key : "data" , operation : "update" , tx_item : tr.rowIndex , column : 4 , value : "" } )
-	// 		// state_handler( { key : "data" , operation : "update" , tx_item : tr.rowIndex , column : 6 , value : parseFloat(0.00).toFixed( 2 ) } )
-	// 		// state_handler( { key : "tx_total" , operation : "update" , value : total.innerHTML } )
-	// 		console.log( "here" )
-			
-	// 	} else {
-	// 		document.querySelector( '#add_price' ).disabled = false
-	// 		document.querySelector( '#add_rate' ).disabled = false
-	// 	}
-
-	// }
 
 }
 
