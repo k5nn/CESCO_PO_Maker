@@ -1013,7 +1013,7 @@ function send_printjob() {
 	if ( document.querySelector( "#double_print_box" ) ) {
 		if ( document.querySelector( "#double_print_box" ).checked || route == "collect_tx" ) {
 
-			let bottom_margin = ( ( 19-stateObj[route].data.length ) * 20 )
+			let bottom_margin = ( ( 20-stateObj[route].data.length ) * 19 )
 
 			generic_container( { 
 				id : "carbon_header"  , 
