@@ -1,19 +1,20 @@
 const express = require('express')
 const fs = require('fs');
 const readline = require('readline');
-const { google } = require('googleapis');
 const { networkInterfaces } = require('os');
+const { google } = require('googleapis');
 
 const nets = networkInterfaces();
 const app = express()
 const network_info = {}
-const port = 3000
+const port = 5000
 
 const SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly'];
 const PROD_BASE_DIR = '/data/data/com.termux/files/home/CESCO_PO_Maker'
 const DEV_BASE_DIR = '/data/data/com.termux/files/home/staging/CESCO_PO_Maker'
 // const BASE_DIR = '/data/data/com.termux/files/home/CESCO_PO_Maker'
-const BASE_DIR = '/home/kennedy/Projects/po_maker'
+const BASE_DIR = '/home/kennedy/Projects/DEV_po_maker'
+const BACKUP_PATH = ''
 const ACTIVE_DIR = `${BASE_DIR}/public/data/Active`
 const TOKEN_PATH = `${BASE_DIR}/src/token.json`;
 
@@ -51,7 +52,8 @@ function authorize(credentials, callback) {
 function getNewToken(oAuth2Client, callback) {
   const authUrl = oAuth2Client.generateAuthUrl({
     access_type: 'offline',
-    scope: SCOPES
+    scope: SCOPES ,
+    include_granted_scopes: true
   });
   console.log('Authorize this app by visiting this url:', authUrl);
   const rl = readline.createInterface({
@@ -109,9 +111,7 @@ app.post( '/price' , ( req , res ) => {
 
           if ( vals[ 0 ] === req.body.Code) {
 
-            for (val in vals) {
-              retobj[ keys[ val ] ] = vals[ val ]
-            }
+            for (val in vals) { retobj[ keys[ val ] ] = vals[ val ] }
 
             res.status( 200 ).json( retobj )
 
@@ -171,8 +171,74 @@ app.post( '/fetch_tx' , ( req , res ) => {
       res.status( 404 ).json( { message : "Error Transaction Does Not Exist" } )
     } else {
       fs.readFile( `${ACTIVE_DIR}/${req.body.owner}/${file_name}` , ( err , content ) => {
-        res.status( 200 ).json( JSON.parse( content ) )
-        // console.log( JSON.parse( content ) )
+        let json = JSON.parse( content )
+        let datalists = ""
+        let ret = 
+        `
+        <div id="header">
+          <div id="title">Transaction No : <span id="tx_no">${json.tx_no}</span></div>
+          <div class="horizontal_container">
+            <div>Customer Name : <span id="tx_owner">${json.tx_owner}</span></div>
+            <div>Date : <span id="tx_date">${json.tx_date}</span></div>
+          </div>
+        </div>
+
+        <table>
+          <thead id="tx_table_header">
+            <tr>
+              <th class="hidden_print">Action</th>
+              <th>Qty</th>
+              <th>Unit</th>
+              <th>Item</th>
+              <th>Rate</th>
+              <th>Price</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody id="tx_table_body">
+            <tr id="add_row">
+              <td><button onclick=add_entry()>➕</button></td>
+              <td><input type="number" onchange=change_price() value=""></td>
+              <td><input type="text" onchange=add_unit() value=""></td>
+              <td><input list="items" onchange=add_item() value=""></td>
+              <td><input type="number" onchange=change_price() value="" disabled></td>
+              <td><input list="prices" onchange=change_price() value="" disabled></td>
+              <td id="add_total">0.00</td>
+            </tr>
+        `
+
+        for( entry of json.data ) {
+          ret +=`<tr>${entry[ 0 ]}${entry[ 1 ]}${entry[ 2 ]}${entry[ 3 ]}${entry[ 4 ]}${entry[ 5 ]}${entry[ 6 ]}</tr>`
+
+          if ( entry.hasOwnProperty( "list" ) ) { datalists += `${entry.list}` }
+        }
+
+        ret += `</tbody>
+        </table>
+
+        <div id="footer">
+          <div><span id="item_cnt">${json.data.length}</span> Items</div>
+          <div>Received : ____________________</div>
+          <div>Grand Total : <span id="tx_total">${json.tx_total}</span></div>
+        </div>
+
+        <div id="controls" class="hidden_print">
+          <button onclick=save_tx()>Save</button>
+          <div>
+            <div>
+              <input type="checkbox" id="double_print">
+              <label for="double_print">Double Print</label>
+            </div>
+            <button onclick=send_print()>Print</button>
+          </div>
+          <button onclick=reset_tx()>Reset</button>
+        </div>
+
+        ${datalists}
+        `
+
+        res.setHeader( 'content-type' , 'text/html' )
+        res.status( 200 ).send( ret )
       })
     }
   })
@@ -226,8 +292,6 @@ app.post( '/overwrite_tx' , ( req , res ) => {
     if (file_name == "") {
       res.status( 404 ).json( { message : "Error Transaction Does Not Exist" } )
     } else {
-      fs.unlinkSync( `${ACTIVE_DIR}/${req.body.owner}/${file_name}` )
-
       fs.writeFile( dest_dir + `${file_name}` , JSON.stringify( req.body.data , null , "\t" ) , ( err ) => {
         res.status( 200 ).json( { message : 'Transaction Overwritten' } )
       })
@@ -236,128 +300,153 @@ app.post( '/overwrite_tx' , ( req , res ) => {
 })
 
 app.post( '/retrieve_records' , ( req , res ) => {
+
   let data_dir = `${ACTIVE_DIR}/${req.body.owner}`
-  let unsorted_res_arr = []
-  let sorted_res_arr = []
+  let unsorted_data = []
+  let sorted_data = []
+  let today = new Date()
+  let tommorrow = new Date( today.setDate( today.getDate() + 1 ) ).toLocaleDateString( "PH" )
+  let gt = 0.00
 
   fs.stat( data_dir , ( err , stats ) => {
 
     if ( err ) {
       res.status( 400 ).json( { message : `${req.body.owner} Does not have records` } )
-      return
     }
 
-    fs.readdir( data_dir , ( err , files ) => {
+    fs.readdir( data_dir , async ( err , files ) => {
 
       if ( files.length == 0 ) {
         res.status( 400 ).json( { message : `No Records` } )
         return
       }
 
-      for (file_cnt in files) {
+      for (file in files) {
 
-        let current_file = files[ file_cnt ]
+        let current_file = files[ file ]
+        let invalid_flag = false
 
         fs.readFile( `${data_dir}/${current_file}` , ( err , data ) => {
 
-          if ( err ) {
-            res.status( 400 ).json( { message : `${data_dir}/${current_file} Cannot Be Read` } )
+          if ( err ) { res.status( 400 ).json( { message : `${data_dir}/${current_file} Cannot Be Read` } ) }
+
+          let ret = ""
+
+          try {
+            unsorted_data.push( JSON.parse( data.toString() ) )
+          } catch {
+            res.status( 500 ).json( { message : `${data_dir}/${current_file} is invalid` } )
             return
           }
 
-          try {
+          if ( unsorted_data.length == files.length ) {
+            ret = `
+            <div id="header">
+              <div id="title">Counter Receipt</span></div>
+              <div class="horizontal_container">
+                <div>Customer Name : <span id="tx_owner">${req.body.owner}</span></div>
+                <div>Date : <span id="tx_date">${tommorrow}</span></div>
+              </div>
+            </div>
 
-            let file_json = JSON.parse( data.toString() )
-            let obj = {
-              tx_id : file_json.tx_no ,
-              tx_date : file_json.tx_date ,
-              tx_total : file_json.tx_total
-            }
-            unsorted_res_arr.push( obj )
-
-            if ( unsorted_res_arr.length == files.length ) {
-              let resp_gt = 0
-              let resp_obj = {}
-
-              for (var i = 0; i <= unsorted_res_arr.length; i++) {
-                for ( obj of unsorted_res_arr ) {
-                  if (obj.tx_id == i) {
-                    resp_gt += Number.parseFloat( obj.tx_total )
-                    sorted_res_arr.push( obj )
-                  }
+            <table>
+              <thead id="tx_table_header">
+                <tr>
+                  <th>Transaction No</th>
+                  <th>Date</th>
+                  <th>Total</th>
+                </tr>
+              </thead>
+              <tbody id="tx_table_body">`
+            
+            for (var i = 0; i <= unsorted_data.length; i++) {
+              for( data of unsorted_data ) {
+                if ( data.tx_no == i ) {
+                  ret += `<tr><td>${data.tx_no}</td><td>${data.tx_date}</td><td>${data.tx_total}</td></tr>`
+                  gt += parseFloat( data.tx_total )
                 }
               }
-
-              res.status( 200 ).json( { gt : resp_gt.toFixed( 2 ) , data : sorted_res_arr } )
-
             }
 
+            ret += `</tbody>
+            </table>
 
-          } catch {
-            res.status( 400 ).json( { message : `${data_dir}/${file_cnt} is invalid` } )
-            return 
+            <div id="footer">
+              <div>Received : ____________________</div>
+              <div>Grand Total : <span id="tx_total">${gt.toFixed( 2 )}</span></div>
+            </div>
+
+            <div id="controls" class="hidden_print">
+              <div>
+                <div>
+                  <input type="checkbox" id="double_print" checked>
+                  <label for="double_print">Double Print</label>
+                </div>
+                <button onclick=send_print()>Print</button>
+              </div>
+              <button onclick=reset_tx()>Reset</button>
+            </div>
+            `
+
+            res.setHeader( 'content-type' , 'text/html' )
+            res.status( 200 ).send( ret )
           }
-        }
-      )}
-
+        })
+      }
     })
   })
 })
 
-app.get( '/', (req, res) => {
-  res.sendFile( BASE_DIR + '/index.html' )
+app.get( '/public/js/*' , ( req , res ) => {
+  res.sendFile( BASE_DIR + req.path )
 })
 
-app.get( '/public/css/resetter.css' , ( req , res ) => {
-  res.sendFile( BASE_DIR + '/public/css/resetter.css' )
+app.get( '/public/css/*' , ( req , res ) => {
+  res.sendFile( BASE_DIR + req.path )
 })
 
-app.get( '/public/css/index.css' , ( req , res ) => {
-  res.sendFile( BASE_DIR + '/public/css/index.css' )
-})
+// app.get( '/public/css/resetter.css' , ( req , res ) => {
+//   res.sendFile( BASE_DIR + '/public/css/resetter.css' )
+// })
 
-app.get( '/public/js/data.js' , ( req , res ) => {
-  res.sendFile( BASE_DIR + '/public/js/data.js' )
-})
+// app.get( '/public/css/index.css' , ( req , res ) => {
+//   res.sendFile( BASE_DIR + '/public/css/index.css' )
+// })
 
-app.get( '/public/js/index.js' , ( req , res ) => {
-  res.sendFile( BASE_DIR + '/public/js/index.js' )
-})
+// app.get( '/public/js/data.js' , ( req , res ) => {
+//   res.sendFile( BASE_DIR + '/public/js/data.js' )
+// })
 
-app.get( '/public/js/router.js' , ( req , res ) => {
-  res.sendFile( BASE_DIR + '/public/js/router.js' )
-})
+// app.get( '/public/js/index.js' , ( req , res ) => {
+//   res.sendFile( BASE_DIR + '/public/js/index.js' )
+// })
 
-app.get( '/public/js/table_dao.js' , ( req , res ) => {
-  res.sendFile( BASE_DIR + '/public/js/table_dao.js')
-})
+// app.get( '/public/js/router.js' , ( req , res ) => {
+//   res.sendFile( BASE_DIR + '/public/js/router.js' )
+// })
 
-app.get( '/public/js/lib.js' , ( req , res ) => {
-  res.sendFile( BASE_DIR + '/public/js/lib.js' )
-})
+// app.get( '/public/js/table_dao.js' , ( req , res ) => {
+//   res.sendFile( BASE_DIR + '/public/js/table_dao.js')
+// })
 
-app.get( '/print.css' , ( req , res ) => {
-  res.sendFile( BASE_DIR + '/public/css/print.min.css')
-})
+// app.get( '/public/js/lib.js' , ( req , res ) => {
+//   res.sendFile( BASE_DIR + '/public/js/lib.js' )
+// })
 
 app.get( '/*' , (req , res) => {
   res.sendFile( BASE_DIR + '/index.html' )
 })
 
-app.listen( port, "127.0.0.1" , () => {
- console.log(`Example app listening on port localhost:${port}`)
+app.listen( port, "0.0.0.0" , () => {
+
+  console.log( `Listing on the ff
+    ` )
+  for( interface in network_info ) {
+    console.log( `${network_info[ interface ][ 0 ]}:${port}` )
+  }
+  console.log( `
+  command to state : node index
+  command to stop : Ctrl + C` )
+
 })
-
-// app.listen( port, "0.0.0.0" , () => {
-
-//   console.log( `Listing on the ff
-//     ` )
-//   for( interface in network_info ) {
-//     console.log( `${network_info[ interface ][ 0 ]}:${port}` )
-//   }
-//   console.log( `
-//   command to state : node index
-//   command to stop : Ctrl + C` )
-
-// })
 //app

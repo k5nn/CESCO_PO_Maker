@@ -1,3 +1,56 @@
+document.addEventListener( 'htmx:afterRequest' , ( e ) => {
+
+	if ( e.detail.failed ) {
+		alert( JSON.parse( e.detail.xhr.response ).message )
+		return
+	}
+
+	if ( e.detail.target.id == "tx_no" ) {
+		let new_res = JSON.parse( e.detail.xhr.response )
+		state_handler( { op : "update_ui" , target_ids : [ "tx_no" , "tx_owner" ] , target_vals : [ new_res.tx_id , e.detail.elt.value ] } )
+		document.title = e.detail.elt.value
+	}
+})
+
+document.addEventListener( 'htmx:afterSwap' , ( e ) => {
+
+	let route = window.location.pathname.split( "/" )[ 1 ]
+
+	if ( e.detail.target.id == "query_results" ) {
+		state_handler( { op : "read" , route : route } )
+		document.title = stateObj[ route ].tx_owner
+		if ( route == "collect_tx" ) { document.querySelector( "#double_print" ).parentNode.style.display = "none" }
+	}
+})
+
+window.addEventListener( 'beforeprint' , ( e ) => {
+	let route = window.location.pathname.split( "/" )[ 1 ]
+
+	if ( document.querySelector( "#double_print" ).checked ) {
+		let clone = document.querySelector( "#content_container" ).cloneNode( true )
+		let margin_bottom = ( 20-stateObj[route].data.length ) * 19
+
+		if ( margin_bottom < 0 ) { margin_bottom = 0 }
+
+		clone.id = "cloned_content_container"
+		clone.style.marginTop = "10px"
+		clone.querySelector( "#routes" ).outerHTML = ""
+
+		document.querySelector( "table" ).style.marginBottom = `${ margin_bottom }px`
+		clone.querySelector( "table" ).style.marginBottom = `${ margin_bottom }px`
+
+		document.querySelector( "#content_container" ).appendChild( clone )
+	}
+})
+
+window.addEventListener( 'afterprint' , ( e ) => {
+	if ( document.querySelector( "#double_print" ).checked ) {
+		let clone = document.querySelector( "#cloned_content_container" )
+		document.querySelector( "table" ).style.marginBottom = `0px`
+		document.querySelector( "#content_container" ).removeChild( clone )
+	}
+})
+
 document.addEventListener( 'readystatechange' , async ( e ) => {
 
 let test_obj = {
@@ -13,14 +66,13 @@ let test_obj = {
 					let option = document.createElement( 'option' )
 					option.value = json.customers[ customer ]
 					option.innerHTML = json.customers[ customer ]
-					document.querySelector( "#customers" ).appendChild( option )	
+					document.querySelector( "#customers" ).appendChild( option )
 				}
 			})
 		})
 
 		for (item in items) {
 			let option = document.createElement( 'option' )
-			option.value = `{ "name" : "${item}" , "code" : "${items[ item ].Code}" }`
 			option.innerHTML = item
 			document.querySelector( "#items" ).appendChild( option )
 		}
@@ -34,133 +86,40 @@ let test_obj = {
 
 			if ( route == "make_tx" || ( test_obj.active && test_obj.route == "make_tx" ) ) {
 
-				header()
-					title()
-					generic_container( { id : "header_details_container" , horizontal : true , parent : document.querySelector( "#header" ) } )
-						generic_container( 
-							{ id : "name_input_container" , horizontal : true , parent : document.querySelector( "#header_details_container" ) } 
-						)
-							generic_label(
-								{ 
-									id : "name_label" , innerHTML : "Customer Name :&nbsp" , 
-									parent : document.querySelector( "#name_input_container" ) 
-								}
-							)
-							name_field()
-						generic_container(
-							{ id : "date_container" , horizontal : true , parent : document.querySelector( "#header_details_container" ) } 
-						)
-							generic_label( 
-								{ id : "date_label" , innerHTML : "Date :&nbsp" , parent : document.querySelector( "#date_container" ) }
-							)
-							date_field()
-				tx_table( false )
-					tx_table_header()
-						thead_row()
-					tx_table_body()
-						tbody_row()
-				footer()
-					generic_container( 
-						{ id : "footer_details_container" , horizontal : true , parent : document.querySelector( "#footer" ) }
-					)
-						generic_container(
-							{ id : "count_container" , horizontal : true , parent : document.querySelector( "#footer_details_container" ) }
-						)
-							generic_label(
-								{ id : "count_label" , 
-								  innerHTML : `${stateObj[route].data.length} items` ,
-								  parent : document.querySelector( "#count_container" )
-								}
-							)
-						generic_container( 
-							{ id : "signature_container" , horizontal : true , parent : document.querySelector( "#footer_details_container" ) } 
-						)
-							generic_label(
-								{ id : "signature_label" , 
-								  innerHTML : "Recieved By :&nbsp;____________________" , 
-								  parent : document.querySelector( "#signature_container" ) 
-								}
-							)
-						generic_container( 
-							{ id : "total_container" , horizontal : true , parent : document.querySelector( "#footer_details_container" ) } 
-						)
-							generic_label( 
-								{ id : "total_label" , innerHTML : "Total :&nbsp;" , parent : document.querySelector( "#total_container" ) }
-							)
-							total_field()
-				generic_container( 
-					{ id : "controls_container" , horizontal : true , parent : document.querySelector( "#content_container" ) } 
-				)
-					save_button()
-					print_button()
-					reset_button()
+				if ( stateObj[ route ].tx_owner != "" ) { document.title = stateObj[ route ].tx_owner }
 
-			} else if ( route == "load_tx" || ( test_obj.active && test_obj.route == "load_tx" ) ) {
+				header( { target : document.querySelector( "#content_container" ) , route : route } )
+				htmx.process( document.querySelector( "#tx_owner" ) )
 
-				header()
-					generic_container( 
-						{ id : "search_container" , horizontal : false , centered : true , parent : document.querySelector( "#search_header" ) } 
-					)
-						generic_container(
-							{ 
-								id : "tx_no_container" , horizontal : true , centered : true , 
-								class : [ "form_container" ] ,
-								parent : document.querySelector( "#search_container" ) 
-							}
-						)
-							generic_label(
-								{ 
-									id : "tx_no_label" , innerHTML : "Transaction No:&nbsp;" , 
-									class : [ "form_label" ] , parent : document.querySelector( "#tx_no_container" ) 
-								}
-							)
-							tx_no_field()
-						generic_container( 
-							{ 
-								id : "tx_owner_container" , horizontal : true , centered : true , 
-								class : [ "form_container" ] ,
-								parent : document.querySelector( "#search_container" ) 
-							} 
-						)
-							generic_label(
-								{ 
-									id : "tx_owner_label" , innerHTML : "Owner:&nbsp;" , 
-									class : [ "form_label" ] , parent : document.querySelector( "#tx_owner_container" ) 
-								}
-							)
-							tx_owner_field()
-						search_button()
+				table( { target : document.querySelector( "#content_container" ) , route : route } )
 
-			} else if ( route == "collect_tx" || ( test_obj.active && test_obj.route == "collect_tx" ) ) {
+				footer( { target : document.querySelector( "#content_container" ) , route : route } )
 
-				header()
-					generic_container(
-						{ 
-							id : "collect_params_container" , horizontal : false , centered : true , 
-							parent : document.querySelector( "#search_header" ) 
-						} 
-					)
-						generic_container( 
-							{ 
-								id : "tx_owner_container" , horizontal : true , centered : true , 
-								class : [ "form_container" ] ,
-								parent : document.querySelector( "#collect_params_container" ) 
-							}
-						)
-							generic_label(
-								{ 
-									id : "tx_owner_label" , innerHTML : "Owner:&nbsp;" , 
-									class : [ "form_label" ] , parent : document.querySelector( "#tx_owner_container" ) 
-								}
-							)
-							tx_owner_field()
-						search_button()
-						
+				controls( { target : document.querySelector( "#content_container" ) , route : route } )
 
-			}
+			} else if ( 
+				route == "load_tx" || ( test_obj.active && test_obj.route == "load_tx" ) ||
+				route == "collect_tx" || ( test_obj.active && test_obj.route == "collect_tx" ) ||
+				route == "archives" || ( test_obj.active && test_obj.route == "archives" )
+			) {
 
+				forms( { target : document.querySelector( "#content_container" ) , route : route } )
+				htmx.process( document.querySelector( "#query_form" ) )
+
+				if ( stateObj[ route ].data.length != 0 ) {
+					let res_id = "#query_results"
+
+					document.title = stateObj[ route ].tx_owner
+
+					header( { target : document.querySelector( res_id ) , route : route } )
+
+					table( { target : document.querySelector( res_id ) , route : route } )
+
+					footer( { target : document.querySelector( res_id ) , route : route } )
+
+					controls( { target : document.querySelector( res_id ) , route : route } )
+				}
+			} 
 		}
-
 	}
-
 })

@@ -11,25 +11,27 @@
 
 <body>
 	<div id="content_container">
-
 		<div id="routes">
 			<a href="/make_tx">Make Transaction</a>
 			<a href="/load_tx">Load Transaction</a>
 			<a href="/collect_tx">Collect</a>
+			<!-- <a href="/archives">Search Archives</a> -->
 		</div>
-
-		<datalist id="items"></datalist>
-
-		<datalist id="prices"></datalist>
-
-		<datalist id="customers"></datalist>
-
 	</div>
+	
+	<datalist id="items"></datalist>
+
+	<datalist id="prices"></datalist>
+
+	<datalist id="customers"></datalist>
 
 </body>
 
+<script src="./public/js/htmx.min.js"></script>
+<script src="./public/js/json-enc.js"></script>
 <script src="./public/js/data.js"></script>
 <script src="./public/js/lib.js"></script>
 <script src="./public/js/index.js"></script>
+
 
 </html>

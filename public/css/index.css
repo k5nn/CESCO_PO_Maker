@@ -1,20 +1,20 @@
 body {
 	display: grid;
-	grid-template-columns: 15vw [content] 70vw 15vw;
+	grid-template-columns: 10vw [content] 80vw 10vw;
 	grid-template-rows: 5vh [content] auto;
 	font-size : 24px;
 }
 input , button { font-size: 24px; }
 
-#content_container {
+#content_container , #cloned_content_container {
 	display: flex;
 	flex-direction: column;
 	grid-area: content;
 }
 
-#content_container > div { margin: 10px 0px; }
+#content_container > div , #cloned_content_container > div { margin: 5px 0px; }
 
-#routes {
+#routes , #footer {
 	display: flex;
 	flex-direction: row;
 	justify-content: space-between;
@@ -67,24 +67,39 @@ input , button { font-size: 24px; }
 #tx_table_body > tr > td :not(input[ list = "items" ] , button) { width: 100px; }
 #tx_table_body > tr > td > input[ list = "items" ]{ width: 500px }
 
-#footer {
+#controls {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: flex-end;
+}
+#controls > button { margin-top: 5px; width: 180px }
+#controls > div > button { width: 180px }
+
+form {
 	display: flex;
 	flex-direction: column;
+	align-items: center;
+}
+form > div { display : flex; flex-direction: row; justify-content: space-between; align-items: center; margin: 5px 0px }
+form > div > label { width: 270px;  }
+
+#footer {
+	display: flex;
+	flex-direction: row;
 	align-content: space-between;
 }
 #footer > div { margin: 5px 0px; }
 
 #signature_label { text-align: center; margin-top: 5px; }
 
-#controls_container { align-items: flex-end;  }
-#controls_container > button { width: 200px;  }
-
 #print_modifiers > .print_checkboxes { padding-bottom: 5px; }
 
 @media print {
-	/*#Actions , #add_row , #controls , #routes , .actions { display: none; }*/
+	
+	form , button , #routes , #add_row , #controls , #search_header , .hidden_print { display: none; }
 
-	#routes , #add_row , #controls_container , #search_header , .hidden_print { display: none; }
+	#content_container > div , #cloned_content_container > div { margin: 2.5px 0px; }
 
 	body {
 		grid-template-columns: [content] 100vw;
