@@ -1,0 +1,6 @@
+src/node_modules
+src/credentials.json
+src/token.json
+public/data
+public/js/lib_old.js
+public/js/data.js
