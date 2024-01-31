@@ -13,11 +13,10 @@ document.addEventListener( 'htmx:afterRequest' , ( e ) => {
 })
 
 document.addEventListener( 'htmx:afterSwap' , ( e ) => {
-
 	let route = window.location.pathname.split( "/" )[ 1 ]
 
 	if ( e.detail.target.id == "query_results" ) {
-		state_handler( { op : "read" , route : route } )
+		state_handler( { op : "read" } )
 		document.title = stateObj[ route ].tx_owner
 		if ( route == "collect_tx" ) { document.querySelector( "#double_print" ).parentNode.style.display = "none" }
 	}
@@ -103,6 +102,7 @@ let test_obj = {
 				route == "archives" || ( test_obj.active && test_obj.route == "archives" )
 			) {
 
+				console.log( stateObj[ route ] )
 				forms( { target : document.querySelector( "#content_container" ) , route : route } )
 				htmx.process( document.querySelector( "#query_form" ) )
 
@@ -115,9 +115,13 @@ let test_obj = {
 
 					table( { target : document.querySelector( res_id ) , route : route } )
 
-					footer( { target : document.querySelector( res_id ) , route : route } )
+					if ( route != "archives" ) {
+						footer( { target : document.querySelector( "#content_container" ) , route : route } )
+					}
 
-					controls( { target : document.querySelector( res_id ) , route : route } )
+					controls( { target : document.querySelector( "#content_container" ) , route : route } )
+
+
 				}
 			} 
 		}

@@ -1,6 +1,7 @@
 src/node_modules
 src/credentials.json
-src/token.json
+src/token_rw.json
+src/token_ro.json
 public/data
 public/js/lib_old.js
 public/js/data.js

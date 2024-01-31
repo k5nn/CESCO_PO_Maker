@@ -2,28 +2,30 @@
 let stateObj = {
 	make_tx : {
 		data : [] ,
-		tx_no : "" ,
 		tx_owner : "" ,
+		tx_no : "" ,
 		tx_date : "" ,
 		tx_total : "0.00"
 	} , 
 	load_tx : {
 		data : [] ,
-		tx_no : "" ,
 		tx_owner : "" ,
+		tx_no : "" ,
 		tx_date : "" ,
 		tx_total : "0.00"
 	} ,
 	collect_tx : {
 		data : [] ,
+		tx_date : "" ,
 		tx_owner : "" ,
 		tx_total : "0.00"
 	} ,
 	archives : {
 		data : [] ,
-		tx_item : "" ,
 		tx_owner : "" ,
-		tx_total : "0.00"
+		tx_item : "" ,
+		tx_datefrom : "" ,
+		tx_dateto : "" 
 	}
 }
 
@@ -31,13 +33,13 @@ if (history.state) {
 	stateObj.make_tx = history.state.make_tx
 	stateObj.load_tx = history.state.load_tx
 	stateObj.collect_tx = history.state.collect_tx
+	stateObj.archives = history.state.archives
 }
 //#1 Global Declaration
 
 //#2 Templates
 function header( args ) {
 	let ret = ""
-	let date = new Date()
 
 	if ( args.route == "make_tx" || args.route == "load_tx" ) {
 		ret = `
@@ -46,9 +48,10 @@ function header( args ) {
 			<div class="horizontal_container">`
 
 		if ( args.route == "make_tx" ) {
+			let date = new Date()
 			ret += `
 				<div>
-					<label for="customer_name">Customer Name : </label>
+					<label for="tx_owner">Customer Name : </label>
 					<input list="customers" name="Customer" id="tx_owner"
 					hx-post="/get_tx_number" hx-target="#tx_no" hx-swap="none"
 					value="${stateObj[ args.route ].tx_owner}">
@@ -68,12 +71,24 @@ function header( args ) {
 	} else if ( args.route == "collect_tx" ) {
 		ret = `
 		<div id="header">
-          <div id="title">Counter Receipt</span></div>
+          <div id="title">Counter Receipt</div>
           <div class="horizontal_container">
             <div>Customer Name : <span id="tx_owner">${stateObj[ args.route ].tx_owner}</span></div>
             <div>Date : <span id="tx_date">${stateObj[ args.route ].tx_date}</span></div>
           </div>
         </div>
+		`
+	} else if ( args.route == "archives" ) {
+		ret = `
+		<div id="header">
+        <div id="title">
+          <span id="tx_owner">${stateObj[ args.route ].tx_owner}</span> 
+          bought ${stateObj[ args.route ].tx_item} from ${stateObj[ args.route ].tx_datefrom} to ${stateObj[ args.route ].tx_dateto}
+        </div>
+        <div class="horizontal_container">
+          <div>Showing ${stateObj[ args.route ].data.length} results</div>
+        </div>
+      </div>
 		`
 	}
 
@@ -89,7 +104,6 @@ function table( args ) {
 	ret = `
 		<table>
 			<thead id="tx_table_header">
-
 	`
 
 	if ( args.route == "make_tx" || args.route == "load_tx" ) {
@@ -111,6 +125,18 @@ function table( args ) {
 					<th>Transaction No</th>
 					<th>Date</th>
 					<th>Total</th>
+				</tr>
+			</thead>
+		`
+	} else if ( args.route == "archives" ) {
+		ret += `
+				<tr>
+					<th>Tx No</th>
+					<th>Date</th>
+					<th>Qty</th>
+					<th>Item</th>
+					<th>Rate</th>
+					<th>Base</th>
 				</tr>
 			</thead>
 		`
@@ -149,6 +175,15 @@ function table( args ) {
 		ret += `</tbody>
 		</table>
 		`
+	} else if ( args.route == "archives" ) {
+		ret += `<tbody id="tx_table_body">`
+
+			for ( entry of stateObj[ args.route ].data ) { 
+				ret += `<tr>${entry[0]}${entry[1]}${entry[2]}${entry[3]}${entry[4]}${entry[5]}</tr>` 
+			}
+
+		ret += `</tbody>
+			</table>`
 	}
 
 	if (args.debug) { console.log( ret ) }
@@ -183,28 +218,33 @@ function controls( args ) {
 	<div id="controls" class="hidden_print">
 	`
 
-	if ( args.route == "collect_tx" ) {
-		ret += `
-			<div>
-				<div style="display:none;">
-					<input type="checkbox" id="double_print">
-		 			<label for="double_print">Double Print</label>
-		`
-	} else {
+	if ( args.route == "make_tx" || args.route == "load_tx" ) {
 		ret += `
 			<button onclick=save_tx()>Save</button>
 			<div>
 				<div>
 		 			<input type="checkbox" id="double_print">
 		 			<label for="double_print">Double Print</label>
+		 		</div>
+				<button onclick=send_print()>Print</button>
+			</div>
 		`
 	}
 
-	ret += `
+	if ( args.route == "collect_tx" ) {
+		ret += `
+			<div>
+				<div style="display:none;">
+					<input type="checkbox" id="double_print">
+		 			<label for="double_print">Double Print</label>
 				</div>
 				<button onclick=send_print()>Print</button>
 			</div>
-		<button onclick=reset_tx()>Reset</button>
+		`
+	}
+	
+	ret += `
+		<button onclick=reset_tx()>Reset</button
 	</div>
 	`
 
@@ -220,12 +260,12 @@ function forms( args ) {
 		ret = `
 		<form id="query_form" hx-post="/fetch_tx" hx-target="#query_results" hx-swap="innerHTML">
 			<div>
-				<label for="search_number">Transaction Number</label>
-				<input type="number" name="number" id="search_number" value="${stateObj[ args.route ].tx_no}">
+				<label for="input_no">Transaction Number</label>
+				<input type="text" name="number" id="input_no" value="${stateObj[ args.route ].tx_no}">
 			</div>
 			<div>
-				<label for="search_owner">Transaction Owner</label>
-				<input list="customers" name="owner" id="search_owner" value="${stateObj[ args.route ].tx_owner}">
+				<label for="tx_owner">Transaction Owner</label>
+				<input list="customers" name="owner" id="tx_owner" value="${stateObj[ args.route ].tx_owner}">
 			</div>
 			<input type="submit" value="Search Transaction">
 		</form>
@@ -236,37 +276,42 @@ function forms( args ) {
 		ret = `
 		<form id="query_form" hx-post="/retrieve_records" hx-target="#query_results" hx-swap="innerHTML">
 			<div>
-				<label for="collect_owner">Customer Name</label>
-				<input list="customers" name="owner" id="collect_owner" value="${stateObj[ args.route ].tx_owner}">
+				<label for="tx_owner">Customer Name</label>
+				<input list="customers" name="owner" id="tx_owner" value="${stateObj[ args.route ].tx_owner}">
 			</div>
 			<input type="submit" value="Collect Transactions">
 		</form>
 
 		<div id="query_results"></div>
 		`
-	} else if ( args.route == "search_archives" ) {
+	} else if ( args.route == "archives" ) {
+		let date = new Date()
 		ret = `
-		<form id="query_form" hx-post="/retrieve_records">
+		<form id="query_form" hx-post="/retrieve_archives" hx-target="#query_results" hx-swap="innerHTML">
 			<div>
-				<label for="archive_owner">Customer Name</label>
-				<input list="customers" name="owner" id="archive_owner" value=${stateObj[ args.route ].tx_owner}>
+				<label for="tx_owner">Customer Name</label>
+				<input list="customers" name="owner" id="tx_owner" value="${stateObj[ args.route ].tx_owner}">
 			</div>
 			<div>
-				<label for="archive_item">Item Search</label>
-				<input list="items" name="item" id="archve_item" value=${stateObj[ args.route ].tx_item}>
+				<label for="tx_item">Item Search</label>
+				<input list="items" name="item" id="tx_item" value="${stateObj[ args.route ].tx_item}">
 			</div>
-			<div>
+			<div style="width : 37%">
 				<div>
-					<label for="archive_from">From</label>
-					<input type="date" name="from_date" id="archive_from">
+					<label for="tx_datefrom">From</label>
+					<input type="date" name="from_date" id="tx_datefrom" min="2023-10-28" max="${date.toLocaleDateString( "PH" )}" 
+					value="${stateObj[ args.route ].tx_datefrom}" onchange="change_to_date_min()" required>
 				</div>
 				<div>
-					<label for="archive_to">To</label>
-					<input type="date" name="to_date" id="archive_to">
+					<label for="tx_dateto">To</label>
+					<input type="date" name="to_date" id="tx_dateto" min="2023-10-28" max="${date.toLocaleDateString( "PH" )}" 
+					value="${stateObj[ args.route ].tx_dateto}" required>
 				</div>
 			</div>
 			<input type="submit" value="Search Archives">
 		</form>
+
+		<div id="query_results"></div>
 		`
 	}
 
@@ -310,48 +355,62 @@ function state_handler( args ) {
 		let i = 0
 		for( id of args.target_ids ) {
 
-			if ( document.querySelector( `#${id}` ).tagName == "INPUT" ) {
-				stateObj[ route ][ id ] = args.target_vals[ i ]
+			stateObj[ route ][ id ] = args.target_vals[ i ]
+
+			if ( document.querySelector( `#${id}` ).tagName == "INPUT" ) {				
 				document.querySelector( `#${id}` ).setAttribute( "value" , args.target_vals[ i ] )
 			} else {
-				stateObj[ route ][ id ] = args.target_vals[ i ]
 				document.querySelector( `#${id}` ).innerHTML = args.target_vals[ i ]
 			}
+
 			i++
 		}
 		supress_fetch = true
 	} else if ( args.op == "reset_tx" ) {
-		stateObj[ route ] = {
-			data : [] ,
-			tx_owner : "" ,
-			tx_total : "0.00"
+		document.title = `${window.location.host}${window.location.pathname}`
+
+		let default_key_vals = {
+			"data" : [] ,
+			"tx_owner" : "" ,
+			"tx_no" : "" ,
+			"tx_total" : "0.00" ,
+			"tx_datefrom" : "" ,
+			"tx_dateto" : "" ,
+			"tx_item" : ""
 		}
 
-		document.title = `${window.location.host}${window.location.pathname}`
-		document.querySelector( "#tx_owner" ).value = stateObj[ route ].tx_owner
-		document.querySelector( "#tx_total" ).innerHTML = stateObj[ route ].tx_total
+		for ( key in default_key_vals ) {
+			if ( stateObj[ route ].hasOwnProperty( key ) ) {
+				stateObj[ route ][ key ] = default_key_vals[ key ]
 
-		if ( route == "make_tx" || route == "load_tx" ) {
-			stateObj[ route ].tx_no = ""
-			stateObj[ route ].tx_date = document.querySelector( "#tx_date" ).innerHTML
-			document.querySelector( "#tx_no" ).innerHTML = stateObj[ route ].tx_no
-			document.querySelector( "#item_cnt" ).innerHTML = stateObj[ route ].data.length
-			document.querySelector( "#tx_date" ).innerHTML = stateObj[ route ].tx_date
+				if ( key == "data" ) { continue }
+
+				let input_key = `#input_${key.split( "_" )[ 1 ]}`
+
+				if ( document.querySelector( input_key ) ) { document.querySelector( input_key ).value = "" }
+
+				if ( document.querySelector( `#${key}` ).tagName == "INPUT" ) { 
+					document.querySelector( `#${key}` ).value = stateObj[ route ][ key ] 
+				} else {
+					document.querySelector( `#${key}` ).innerHTML = stateObj[ route ][ key ]	
+				}
+			}
 		}
 
 		if ( route == "make_tx" ) {
 			let tbody = document.querySelector( "#tx_table_body" )
 			let add_row = document.querySelector( "#add_row" ).getElementsByTagName( "td" )
+			document.querySelector( "#item_cnt" ).innerHTML = stateObj[ route ].data.length
+			document.querySelector( "#double_print" ).checked = false
 
 			for (elem of add_row) {
 				let td = elem.getElementsByTagName( "input" )
-				if ( td.length != 0 ) {
-					td[ 0 ].setAttribute( "value" , "" )
-				}
+				if ( td.length != 0 ) { td[ 0 ].setAttribute( "value" , "" ) }
 			}
 
 			tbody.innerHTML = document.querySelector( "#add_row" ).outerHTML
-		} else if ( route == "load_tx" || route == "collect_tx" ) {
+
+		} else if ( route == "load_tx" || route == "collect_tx" || route == "archives" ) {
 			document.querySelector( "#content_container" ).innerHTML = `
 			${document.querySelector( "#routes" ).outerHTML}
 			${document.querySelector( "#query_form" ).outerHTML}
@@ -362,52 +421,44 @@ function state_handler( args ) {
 		supress_fetch = true
 	} else if ( args.op == "read" ) {
 
-		if ( args.route == "make_tx" || args.route == "load_tx" ) { 
-			stateObj[ route ].tx_no = document.querySelector( "#tx_no" ).innerHTML 
+		for( key of Object.keys( stateObj[ route ] ) ) {
+
+			if ( key == "data" ) { continue }
+
+			if ( document.querySelector( `#${key}` ).tagName != "INPUT" ) {
+				stateObj[ route ][ key ] = document.querySelector( `#${key}` ).innerHTML
+			} else {
+				stateObj[ route ][ key ] = document.querySelector( `#${key}` ).value
+			}
 		}
-
-		stateObj[ route ].tx_owner = document.querySelector( "#tx_owner" ).innerHTML
-		stateObj[ route ].tx_date = document.querySelector( "#tx_date" ).innerHTML
-		stateObj[ route ].tx_total = document.querySelector( "#tx_total" ).innerHTML
-
 		supress_fetch = true
 	}
 
 	if ( args.op == "insert" || args.op == "update" || args.op == "delete" || args.op == "read" ) {
 		stateObj[ route ].data = []
-		document.querySelector( "#tx_total" ).innerHTML = "0.00"
 
 		let table = document.querySelector( "#tx_table_body" )
 		let gt = 0
 
 		for (var i = 0; i < table.rows.length; i++) {
 
+			if ( table.rows[ i ].id == "add_row" ) continue
+
 			let tds = table.rows[ i ].getElementsByTagName( "td" )
+			let push_obj = {}
+			for (var j = 0; j < tds.length; j++) { push_obj[ j ] = tds[ j ].outerHTML }
 
-			if ( args.op == "read" && args.route == "collect_tx" ) {
+			if ( args.op == "read" ) {
 
-				gt += parseFloat( tds[ 2 ].innerHTML )
+				stateObj[ route ].data.push( push_obj )
 
-				stateObj[ route ].data.push( 
-					{
-						0 : tds[ 0 ].outerHTML ,
-						1 : tds[ 1 ].outerHTML ,
-						2 : tds[ 2 ].outerHTML
-					}
-				)
+				if ( route == "collect_tx" ) { gt += parseFloat( tds[ 2 ].innerHTML ) }
+
+				if ( route == "load_tx" ) { gt += parseFloat( tds[ 6 ].innerHTML ) }
+
 			} else {
-				if ( table.rows[ i ].id == "add_row" ) { continue }
 
 				let list = tds[ 5 ].getElementsByTagName( "input" )[ 0 ].getAttribute( "list" )
-				let push_obj = {
-						0 : tds[ 0 ].outerHTML ,
-						1 : tds[ 1 ].outerHTML ,
-						2 : tds[ 2 ].outerHTML ,
-						3 : tds[ 3 ].outerHTML ,
-						4 : tds[ 4 ].outerHTML ,
-						5 : tds[ 5 ].outerHTML ,
-						6 : tds[ 6 ].outerHTML
-					}
 
 				if ( list != "" ) {
 					if ( document.querySelector( `datalist[ id=${list} ]` ) != null ) {
@@ -422,37 +473,34 @@ function state_handler( args ) {
 			}
 		}
 
-		stateObj[ route ].tx_total = gt.toFixed( 2 )
-		document.querySelector( "#tx_total" ).innerHTML = gt.toFixed( 2 )
+		if ( stateObj[ route ].hasOwnProperty( "tx_total" ) ) {
+			stateObj[ route ].tx_total = gt.toFixed( 2 )
+			document.querySelector( "#tx_total" ).innerHTML = gt.toFixed( 2 )
+		}
 
-		if ( args.route == "make_tx" || args.route == "load_tx" ) {
+		if ( route == "make_tx" || route == "load_tx" ) {
 			document.querySelector( "#item_cnt" ).innerHTML = stateObj[ route ].data.length	 
 		}
 	}
 
 	if ( args.debug ) { console.log( stateObj ) }
 
-	if ( document.querySelector( "#tx_no" ).innerHTML == "" ) {
-		alert( "Transaction Number missing NOT SAVED" )
-		return
-	}
-
-	if (supress_fetch) { 
+	if (supress_fetch) {
 		history.pushState( stateObj , "" )
 		return
+	} else {
+		if ( stateObj[ route ].hasOwnProperty( "tx_no" ) ) { 
+			if ( document.querySelector( "#tx_no" ).innerHTML == "" ) {
+				return alert( "Transaction Number missing NOT SAVED" )
+			}
+		}
 	}
 
 	params.body.tx_date = document.querySelector( "#tx_date" ).innerHTML
 	params.body = JSON.stringify( params.body )
 
 	fetch( '/save_tx' , params ).then( res => {
-		if ( res.status == 200 ) {
-			history.pushState( stateObj , "" )
-		} else {
-			res.json().then( json => {
-				alert( json.message )
-			})
-		}
+		return ( res.status == 200 ) ? history.pushState( stateObj , "" ) : res.json().then( json => { alert( json.message ) } )
 	})
 }
 
@@ -482,26 +530,22 @@ function add_entry() {
 
 	for (var i = 0; i < 7; i++) {
 
-		add_obj[ i ] = ( i == 0 )
-			? `<td class="hidden_print">${tags[ i ]}</td>`
-			: `<td>${tags[ i ]}</td>`
+		add_obj[ i ] = ( i == 0 ) ? `<td class="hidden_print">${tags[ i ]}</td>` : `<td>${tags[ i ]}</td>`
 
-		if ( i > 0 && i != 6 ) {
-			if ( i == 4 || i == 5 ) { children[ i ].getElementsByTagName( "input" )[ 0 ].disabled = true }
-			children[ i ].getElementsByTagName( "input" )[ 0 ].value = ""
-			children[ i ].getElementsByTagName( "input" )[ 0 ].setAttribute( "value" , "" )
-		} else if ( i == 6 ) {
-			children[ i ].innerHTML = "0.00"
-		}
+		if ( i == 0 ) continue
+		if ( i == 4 || i == 5 ) { children[ i ].getElementsByTagName( "input" )[ 0 ].disabled = true }
+		if ( i == 6 ) { children[ i ].innerHTML = "0.00" ; continue }
+
+		children[ i ].getElementsByTagName( "input" )[ 0 ].value = ""
+		children[ i ].getElementsByTagName( "input" )[ 0 ].setAttribute( "value" , "" )
 	}
 
 	add_obj.list = `<datalist id=${code}>${document.querySelector( "#prices" ).innerHTML}</datalist>`
 
-	for ( key in add_obj ) { if ( key != "list" ) { new_row.insertAdjacentHTML( "beforeend" , add_obj[ key ] ) } }
+	for ( key in add_obj ) { if ( key != "list" ) new_row.insertAdjacentHTML( "beforeend" , add_obj[ key ] ) }
 
-	state_handler( { op : "insert" , key : "data" , val : add_obj , debug : 1 } )
+	state_handler( { op : "insert" , key : "data" , val : add_obj } )
 	document.querySelector( "#prices" ).innerHTML = ""
-
 }
 
 function change_price() {
@@ -515,7 +559,7 @@ function change_price() {
 	let base = tds[ 5 ].getElementsByTagName( "input" )[ 0 ].value
 	let tot = tds[ 6 ]
 
-	if ( rate == "" ) { rate = 0 }
+	if ( rate == "" ) rate = 0
 
 	tot.innerHTML = ( isNaN( Number.parseFloat( ( ( base * ( 100 + parseFloat( rate ) ) ) / 100 ) * qty ).toFixed( 2 ) ) ) 
 		? "0.00" 
@@ -533,6 +577,8 @@ function change_price() {
 		)
 	}
 }
+
+function change_to_date_min() { document.querySelector( "#tx_dateto" ).setAttribute( "min" , event.target.value ) }
 
 function add_unit() {
 	event.target.setAttribute( "value" , event.target.value )
@@ -557,7 +603,9 @@ function add_item() {
 	let base = tds[ 5 ].getElementsByTagName( "input" )[ 0 ]
 	let params = {
 		method : 'POST' ,
-		headers : { 'content-type' : 'application/json' }
+		headers : { 
+			'content-type' : 'application/json'
+		}
 	}
 	let supress_fetch = false
 
@@ -620,35 +668,19 @@ function save_tx() {
 	let params = {
 		method : 'POST' ,
 		headers : { 'content-type' : 'application/json' }
-	}10
-
-	if (stateObj[ route ].data.length == 0) {
-		alert( "Nothing to Save" )
-		return
 	}
 
-	console.log( stateObj[ route ].tx_no )
+	if (stateObj[ route ].data.length == 0) return alert( "Nothing to Save" )
 
 	stateObj[ route ].tx_no = document.querySelector( "#tx_no" ).innerHTML
 
 	params.body = JSON.stringify( stateObj[ route ] )
-
 	fetch( '/save_tx' , params ).then( res => {
-		if ( res.status == 200 ) {
-			if ( route == "make_tx" ) { alert( "Trasnaction Saved" ) }
-		} else {
-			res.json().then( json => {
-				alert( json.message )
-			})
-		}
+		return ( res.status == 200 ) ? alert( "Transaction Saved" ) : res.json().then( json => { alert( json.message ) } )
 	})
 }
 
 function send_print() { window.print() }
 
-function reset_tx() {
-	let route = window.location.pathname.split( "/" )[ 1 ]
-
-	if ( route == "make_tx" || route == "load_tx" || route == "collect_tx" ) { state_handler( { op : "reset_tx" } ) }
-}
+function reset_tx() { state_handler( { op : "reset_tx" } ) }
 //#3 Handlers
